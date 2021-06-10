@@ -1,0 +1,15 @@
+Package: BinSeg
+Type: Package
+Title: What the Package Does in One 'Title Case' Line
+Version: 1.0
+Date: 2021-06-10
+Author: Diego Enrique Jiménez Urgell
+Maintainer: Diego Enrique Jiménez Urgell <diegourgell0@gmail.com>
+Description: One paragraph description of what the package does as one
+        or more full sentences.
+License: GPL (>= 2)
+Imports: Rcpp (>= 1.0.6)
+LinkingTo: Rcpp
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
