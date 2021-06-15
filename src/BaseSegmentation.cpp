@@ -26,6 +26,7 @@ class Segment{
 
 };
 
+// Virtual class
 class SegmentationAlgorithm{
 
 };
