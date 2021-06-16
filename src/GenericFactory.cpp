@@ -16,7 +16,7 @@ protected:
 
 public:
 
-    GenericFactory<T>() = delete;
+    GenericFactory<T>() = default;
 
     static bool Register(const std::string name, objectCreateMethod funcCreate) {
         if (auto it = regSpecs.find(name); it == regSpecs.end()) {
@@ -38,9 +38,9 @@ public:
 template<class S, class I, class F>
 class Registration {
 public:
-    Registration() = delete;
+    Registration() = default;
 
-    // Authomatic registration method. Specialization classes need to only provide the factoryName.
+    // Automatic registration method. Specialization classes need to only provide the factoryName.
     static std::shared_ptr<I> createMethod() {
         return std::make_shared<S>();
     }

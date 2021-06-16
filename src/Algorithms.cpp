@@ -4,14 +4,14 @@
 
 #include "BaseSegmentation.h"
 
-class BinarySegmentation: public SegmentationAlgorithm{
+class BinarySegmentation: public Algorithm{
 
 };
 
-class SeedBS: public SegmentationAlgorithm{
+class SeedBS: public Algorithm{
 
 };
 
-class WildBS: public SegmentationAlgorithm{
+class WildBS: public Algorithm{
 
 };
