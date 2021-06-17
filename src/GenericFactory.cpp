@@ -7,9 +7,13 @@
 // Communication pointers. The different types are stored in a map of string -> creation Method.
 // The T class represents the interface which every subtype to be registered in the factory implements.
 
+#include <memory>
+#include <map>
+#include <string>
+
 template<class T>
 class GenericFactory {
-protected:
+public:
 
     using objectCreateMethod = std::shared_ptr<T>(*)(); // Use shared pointer because the generated object is sometimes stored in a class.
     inline static std::map<std::string, objectCreateMethod> regSpecs = std::map<std::string, objectCreateMethod>();
