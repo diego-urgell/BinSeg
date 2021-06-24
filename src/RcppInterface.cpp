@@ -8,8 +8,9 @@
 
 
 // [[Rcpp::export]]
-Rcpp::NumericVector binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution){
-    std::vector<std::string> namesDist =  std::vector<std::string>();
+Rcpp::List binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts){
+
+    /*std::vector<std::string> namesDist =  std::vector<std::string>();
     for (auto it = DistributionFactory::regSpecs.begin(); it != DistributionFactory::regSpecs.end(); it++){
         namesDist.push_back(it -> first);
     }
@@ -17,15 +18,18 @@ Rcpp::NumericVector binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcp
     std::vector<std::string> namesAlgo =  std::vector<std::string>();
     for (auto it = AlgorithmFactory::regSpecs.begin(); it != AlgorithmFactory::regSpecs.end(); it++){
         namesAlgo.push_back(it -> first);
-    }
+    }*/
 
     std::shared_ptr<Distribution> dist = DistributionFactory::Create(distribution);
     std::shared_ptr<Algorithm> algo = AlgorithmFactory::Create(algorithm);
 
-    dist -> setCumsum();
-    algo -> init(dist);
-    Rcpp::NumericVector ans(data.size());
+    Rcpp::IntegerVector cpts(numCpts);
 
-    algo -> binseg(&data[0], data.size(), &ans[0]);
-    return ans;
+    dist -> setCumsum();
+    algo -> init(&data[0], data.size(), numCpts, dist, &cpts[0]);
+    algo -> binseg();
+
+    return Rcpp::List::create(
+            Rcpp::Named("cpts", cpts)
+            );
 }

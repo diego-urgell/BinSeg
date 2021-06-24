@@ -42,7 +42,7 @@ public:
         return linearCumsum[end] - linearCumsum[start - 1];
     }
 
-    virtual double getCuadraticSum(int start, int end){
+    virtual double getQuadraticSum(int start, int end){
         throw "No quadratic sum in LinearCumsum";
     }
 
