@@ -10,13 +10,10 @@ public:
 
     inline static std::string factoryName = "BS";
 
-    BinarySegmentation(){
-        is_registered;
-        this -> candidates.emplace(0, this -> length, this -> dist);
-
-    }
+    BinarySegmentation(){ is_registered; }
 
     void binseg(){
+        this -> candidates.emplace(0, this -> length-1, this -> dist);
         for(int i = 0; i < this -> numCpts; i++){
             auto optCpt = this -> candidates.begin();
             this -> changepoints[i] = optCpt -> mid;
@@ -36,5 +33,7 @@ public:
 
 class WildBS: public Algorithm, public Registration<WildBS, Algorithm, AlgorithmFactory>{
 public:
+
     inline static std::string factoryName = "WildBS";
+
 };

@@ -1,4 +1,2 @@
-library(testthat)
-library(BinSeg)
 
-test_check("BinSeg")
+if(require(testthat)) test_check("BinSeg")

@@ -13,14 +13,13 @@ public:
     NormMean(){is_registered;} // CRITICAL LINE, otherwise it does not register
 
     void setCumsum(){
-        this -> cumsum = std::make_shared<CumsumSquared>();
+        this -> cumsum = std::make_shared<Cumsum>();
     }
 
     double costFunction(int start, int end){
         double lSum = this -> cumsum -> getLinearSum(start, end);
-        double sSum = this -> cumsum -> getQuadraticSum(start, end);
         double N = end - start + 1;
-        return sSum - pow(lSum, 2)/N;
+        return - pow(lSum, 2)/N;
     }
 };
 

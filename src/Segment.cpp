@@ -29,12 +29,14 @@ public:
     // To calculate the optimal partition in a segment and
     void optimalPartition(){
         double bestSplitCost = std::numeric_limits<double>::max(), currSplitCost;
-        for(int i = start + 1; i < end; i++){
-            currSplitCost = this -> dist -> getCost(start, i, end);
+        for(int i = this -> start + 1; i < this -> end; i++){
+            currSplitCost = this -> dist -> getCost(this -> start, i, this -> end);
             if (currSplitCost < bestSplitCost){
                 bestSplitCost = currSplitCost;
                 this -> mid = i;
             }
+            int t = this -> mid;
+            t = t + 1;
         }
         this -> bestDecrease = bestSplitCost - this -> costNoSplit;
     }
