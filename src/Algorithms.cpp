@@ -4,15 +4,34 @@
 
 #include "AlgorithmInterface.cpp"
 
-class BinarySegmentation: public Algorithm, public Registration<BinarySegmentation, Algorithm, AlgorithmFactory>{
+// Double Expansion Trick to transform the name of a class into a string.
+#define STRINGIZE(x) #x
+#define TO_STRING(x) STRINGIZE(x)
 
-public:
+// This is the structure that every specific distribution class must have. In order to avoid repetition in the classes
+// definition, this Macro handles the expansion of the code given only the name of the SUBCLASS (which is the name of the
+// algorithm), and the BODY, (which is the specific implementation of the binseg method). The TO_STRING Macro is used
+// in order to register the algorithm in the factory using the class name. Also, in the construtor, the boolean
+// is_registered from Registration class is called in order to instantiate the template.
+#define ALGORITHM(SUBCLASS, BODY) \
+    class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {         \
+    public:                                                                                                 \
+        inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
+        SUBCLASS(){is_registered;}                                                                          \
+        BODY                                                                                                \
+    };
 
-    inline static std::string factoryName = "BS";
 
-    BinarySegmentation(){ is_registered; }
-
-    void binseg(){
+ALGORITHM(BS,
+    /**
+     * For regular Binary Segmentation, first the whole segment is created and pushed into the candidates multiset.
+     * Given the behaviour of a Segment object, just after it is created, the optimal partition is computed and stored as
+     * Segment::mid, along with the decrease in cost that this optimal changepoint produces. Given that the Segments are
+     * stored in a multiset, and the ordering key is the best_decrease, it is guaranteed that the first element in the
+     * set will always be the optimal partition. To find more segments, just find the best split, store the info, and add
+     * to the candidates multiset the two newly created segments.
+     */
+     void binseg(){
         this -> candidates.emplace(0, this -> length-1, this -> dist);
         for(int i = 0; i < this -> numCpts; i++){
             auto optCpt = this -> candidates.begin();
@@ -22,18 +41,18 @@ public:
             this -> candidates.erase(optCpt);
         }
     }
-};
+)
 
-class SeedBS: public Algorithm, public Registration<SeedBS, Algorithm, AlgorithmFactory> {
 
-public:
+ALGORITHM(SeedBS,
+    void binseg(){
 
-    inline static std::string factoryName = "SeedBS";
-};
+    }
+)
 
-class WildBS: public Algorithm, public Registration<WildBS, Algorithm, AlgorithmFactory>{
-public:
 
-    inline static std::string factoryName = "WildBS";
+ALGORITHM(WildBS,
+    void binseg(){
 
-};
+    }
+)

@@ -4,52 +4,57 @@
 
 #include "Algorithms.cpp"
 
-class NormMean: public Distribution, public Registration<NormMean, Distribution, DistributionFactory>{
+#define DISTRIBUTION(SUBCLASS, BODY) \
+    class SUBCLASS: public Distribution, public Registration<SUBCLASS, Distribution, DistributionFactory> { \
+    public:                                                                                                 \
+        inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
+        SUBCLASS(){is_registered;}                                                                          \
+        BODY                                                                                                \
+    };
 
-public:
 
-    inline static std::string factoryName = "NormMean";
-
-    NormMean(){is_registered;} // CRITICAL LINE, otherwise it does not register
-
+DISTRIBUTION(NormMean,
     void setCumsum(){
         this -> cumsum = std::make_shared<Cumsum>();
     }
-
     double costFunction(int start, int end){
         double lSum = this -> cumsum -> getLinearSum(start, end);
         double N = end - start + 1;
         return - pow(lSum, 2)/N;
     }
-};
-
-class NormVar:  public Distribution, public Registration<NormVar, Distribution, DistributionFactory>{
-public:
-
-    inline static std::string factoryName = "NormVar";
-};
-
-class NormMeanVar:  public Distribution, public Registration<NormMeanVar, Distribution, DistributionFactory>{
-public:
-
-    inline static std::string factoryName = "NormMeanVar";
-};
-
-class Poisson: public Distribution, public Registration<Poisson, Distribution, DistributionFactory>{
-public:
-
-    inline static std::string factoryName = "Poisson";
-};
-
-class NegBin:  public Distribution, public Registration<NegBin, Distribution, DistributionFactory>{
-public:
-
-    inline static std::string factoryName = "NegBin";
-};
+)
 
 
-class Exponential:  public Distribution, public Registration<Exponential, Distribution, DistributionFactory>{
-public:
+DISTRIBUTION(NormVar,
+    double costFunction(int start, int end){
 
-    inline static std::string factoryName = "Exp";
-};
+    }
+)
+
+
+DISTRIBUTION(NormMeanVar,
+    double costFunction(int start, int end){
+
+    }
+)
+
+
+DISTRIBUTION(Poisson,
+    double costFunction(int start, int end){
+
+    }
+)
+
+
+DISTRIBUTION(Negbin,
+    double costFunction(int start, int end){
+
+    }
+)
+
+
+DISTRIBUTION(Exponential,
+    double costFunction(int start, int end){
+
+    }
+)
