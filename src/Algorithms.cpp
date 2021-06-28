@@ -17,7 +17,7 @@
     class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {         \
     public:                                                                                                 \
         inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
-        SUBCLASS(){is_registered;}                                                                          \
+        SUBCLASS(){(void) is_registered;}                                                                          \
         BODY                                                                                                \
     };
 

@@ -19,7 +19,7 @@ public:
 
     Cumsum() = default;
 
-    ~Cumsum() = default;
+    virtual ~Cumsum() = default;
 
     /**
      * This init method computes the cumulative sum of the data array and stores it in a vector. It is virtual so that
@@ -75,6 +75,10 @@ private:
     std::vector<double> quadraticCumsum;
 
 public:
+
+    CumsumSquared() = default;
+
+    ~CumsumSquared() = default;
 
     /**
      * This method overrides the init method in the base Cumusm class. It initializes the quadraticSum vector along with

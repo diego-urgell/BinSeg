@@ -8,7 +8,7 @@
     class SUBCLASS: public Distribution, public Registration<SUBCLASS, Distribution, DistributionFactory> { \
     public:                                                                                                 \
         inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
-        SUBCLASS(){is_registered;}                                                                          \
+        SUBCLASS(){(void) is_registered;}                                                                          \
         BODY                                                                                                \
     };
 
@@ -27,34 +27,34 @@ DISTRIBUTION(NormMean,
 
 DISTRIBUTION(NormVar,
     double costFunction(int start, int end){
-
+        return 5;
     }
 )
 
 
 DISTRIBUTION(NormMeanVar,
     double costFunction(int start, int end){
-
+        return 5;
     }
 )
 
 
 DISTRIBUTION(Poisson,
     double costFunction(int start, int end){
-
+        return 5;
     }
 )
 
 
 DISTRIBUTION(Negbin,
     double costFunction(int start, int end){
-
+        return 5;
     }
 )
 
 
 DISTRIBUTION(Exponential,
     double costFunction(int start, int end){
-
+        return 5;
     }
 )

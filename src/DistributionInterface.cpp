@@ -19,7 +19,7 @@ public:
 
     Distribution() = default;
 
-    ~Distribution() = default;
+    virtual ~Distribution() = default;
 
     /**
      * This method creates the setCumsum, and it should be called in order to initialize the Distribution object. Note
@@ -60,5 +60,5 @@ public:
  * template, and initialize and store the mapping of registered classes.
  */
 class DistributionFactory: public GenericFactory<Distribution>{
-    void foo(){regSpecs;}
+    void foo(){(void)regSpecs;}
 };

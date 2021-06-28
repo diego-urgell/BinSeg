@@ -23,7 +23,7 @@ public:
 
     Algorithm() = default;
 
-    ~Algorithm() = default;
+    virtual ~Algorithm() = default;
 
     /**
      * This is the most important method, that implements the algorithm per se. It must be overriden in every specific
@@ -53,5 +53,5 @@ public:
  * Instantiation of the GenericFactory template for the Algorithm interface.
  */
 class AlgorithmFactory: public GenericFactory<Algorithm>{
-    void foo(){regSpecs;}
+    void foo(){(void)regSpecs;}
 };
