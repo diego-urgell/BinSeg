@@ -21,27 +21,42 @@
         BODY                                                                                                \
     };
 
-
-ALGORITHM(BS,
-    /**
-     * For regular Binary Segmentation, first the whole segment is created and pushed into the candidates multiset.
-     * Given the behaviour of a Segment object, just after it is created, the optimal partition is computed and stored as
-     * Segment::mid, along with the decrease in cost that this optimal changepoint produces. Given that the Segments are
-     * stored in a multiset, and the ordering key is the best_decrease, it is guaranteed that the first element in the
-     * set will always be the optimal partition. To find more segments, just find the best split, store the info, and add
-     * to the candidates multiset the two newly created segments.
-     */
-     void binseg(){
+class BS: public Algorithm, public Registration<BS, Algorithm, AlgorithmFactory> {
+    public:
+        inline static std::string factoryName = "BS";
+    BS(){(void) is_registered;}
+    void binseg(){
         this -> candidates.emplace(0, this -> length-1, this -> dist);
         for(int i = 0; i < this -> numCpts; i++){
-            auto optCpt = this -> candidates.begin();
+            std::multiset<Segment>::iterator  optCpt = this -> candidates.begin();
             this -> changepoints[i] = optCpt -> mid;
             this -> candidates.emplace(optCpt -> start, optCpt -> mid, this -> dist);
             this -> candidates.emplace(optCpt -> mid + 1, optCpt -> end, this -> dist);
             this -> candidates.erase(optCpt);
         }
     }
-)
+    };
+
+//ALGORITHM(BS,
+//    /**
+//     * For regular Binary Segmentation, first the whole segment is created and pushed into the candidates multiset.
+//     * Given the behaviour of a Segment object, just after it is created, the optimal partition is computed and stored as
+//     * Segment::mid, along with the decrease in cost that this optimal changepoint produces. Given that the Segments are
+//     * stored in a multiset, and the ordering key is the best_decrease, it is guaranteed that the first element in the
+//     * set will always be the optimal partition. To find more segments, just find the best split, store the info, and add
+//     * to the candidates multiset the two newly created segments.
+//     */
+//     void binseg(){
+//        this -> candidates.emplace(0, this -> length-1, this -> dist);
+//        for(int i = 0; i < this -> numCpts; i++){
+//            auto optCpt = this -> candidates.begin();
+//            this -> changepoints[i] = optCpt -> mid;
+//            this -> candidates.emplace(optCpt -> start, optCpt -> mid, this -> dist);
+//            this -> candidates.emplace(optCpt -> mid + 1, optCpt -> end, this -> dist);
+//            this -> candidates.erase(optCpt);
+//        }
+//    }
+//)
 
 
 ALGORITHM(SeedBS,

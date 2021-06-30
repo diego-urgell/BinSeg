@@ -51,7 +51,8 @@ public:
     double getCost(int start, int mid, int end){
         double first = this -> costFunction(start, mid);
         double second = this -> costFunction(mid+1, end);
-        return first + second;
+        double total = first + second;
+        return total;
     }
 };
 

@@ -31,12 +31,40 @@ DISTRIBUTION(NormVar,
     }
 )
 
+class NormMeanVar: public Distribution, public Registration<NormMeanVar, Distribution, DistributionFactory> {
+    public:
 
-DISTRIBUTION(NormMeanVar,
+    inline static std::string factoryName = "NormMeanVar";
+    NormMeanVar(){(void) is_registered;}
+
     double costFunction(int start, int end){
-        return 5;
+        double lSum =  this -> cumsum -> getLinearSum(start, end);
+        double sSum =  this -> cumsum -> getQuadraticSum(start, end);
+        int N = end - start + 1;
+//        double mean = lSum/N;
+        double var = (sSum - (lSum*lSum/N))/N;
+        if(var <= 0){  // Making sure the variance is not zero, so that the log does not raise an exception
+            var = 0.00000000001;
+        }
+        double cost = N*(log(var) + log(2*M_PI) + 1);
+        return cost;
     }
-)
+    };
+
+
+//DISTRIBUTION(NormMeanVar,
+//    double costFunction(int start, int end){
+//        double lSum =  this -> cumsum -> getLinearSum(start, end);
+//        double sSum =  this -> cumsum -> getQuadraticSum(start, end);
+//        int N = end - start + 1;
+//        double mean = lSum/N;
+//        double var = (sSum - (lSum*lSum/N))/N;
+//        if(var <= 0){  // Making sure the variance is not zero, so that the log does not raise an exception
+//            var = 0.00000000001;
+//        }
+//        return -N*(log(var) + log(2*M_PI) + 1);
+//    }
+//)
 
 
 DISTRIBUTION(Poisson,
