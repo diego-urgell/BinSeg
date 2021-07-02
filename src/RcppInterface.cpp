@@ -8,7 +8,7 @@
 
 
 // [[Rcpp::export]]
-Rcpp::List binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts){
+Rcpp::List binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen = 1){
 
 //    std::vector<std::string> namesDist =  std::vector<std::string>();
 //    for (auto it = DistributionFactory::regSpecs.begin(); it != DistributionFactory::regSpecs.end(); it++){
@@ -26,7 +26,7 @@ Rcpp::List binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String
     Rcpp::IntegerVector cpts(numCpts);
 
     dist -> setCumsum();
-    algo -> init(&data[0], data.size(), numCpts, dist, &cpts[0]);
+    algo -> init(&data[0], data.size(), numCpts, dist, &cpts[0], minSegLen);
     algo -> binseg();
 
     return Rcpp::List::create(

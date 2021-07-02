@@ -15,7 +15,7 @@ public:
 
     std::shared_ptr<Distribution> dist;
     std::multiset<Segment> candidates;
-    int length, numCpts;
+    int length, numCpts, minSegLen;
     int * changepoints;
 
 
@@ -40,11 +40,12 @@ public:
      * @param dist The distribution pointer to compute the costs.
      * @param changepoints The changepoints NumericVector.
      */
-    void init(double *data, int length, int numCpts, std::shared_ptr<Distribution> dist, int * changepoints){
+    void init(double *data, int length, int numCpts, std::shared_ptr<Distribution> dist, int * changepoints, int minSegLen){
         this -> dist = dist;
         this -> dist -> cumsum -> init(data, length);
         this -> length = length;
         this -> numCpts = numCpts;
+        this -> minSegLen = minSegLen;
         this -> changepoints = changepoints;
     }
 };
