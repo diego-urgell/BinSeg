@@ -14,6 +14,7 @@ class Cumsum {
 protected:
 
     std::vector<double> linearCumsum;
+    int length;
 
 public:
 
@@ -28,6 +29,7 @@ public:
      * @param length The length of the data array
      */
     virtual void init(const double *data, const int length) {
+        this -> length = length;
         double currTotal = 0;
         this -> linearCumsum.resize(length);
         for(int i = 0; i < length; i++){
@@ -58,6 +60,10 @@ public:
      */
     virtual double getQuadraticSum(int start, int end){
         throw "No quadratic sum in LinearCumsum";
+    }
+
+    double getTotalMean(){
+        return this -> linearCumsum.back() / this -> length;
     }
 };
 
@@ -91,6 +97,7 @@ public:
         double currSquaredTotal = 0;
         this -> linearCumsum.resize(length);
         this -> quadraticCumsum.resize(length);
+        this -> length = length;
         for(int i = 0; i < length; i++){
             currLinearTotal += data[i];
             currSquaredTotal += pow(data[i], 2);

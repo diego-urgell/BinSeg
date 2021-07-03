@@ -13,7 +13,7 @@
     };
 
 
-DISTRIBUTION(NormMean,
+DISTRIBUTION(mean_norm,
     void setCumsum(){
         this -> cumsum = std::make_shared<Cumsum>();
     }
@@ -25,18 +25,25 @@ DISTRIBUTION(NormMean,
 )
 
 
-DISTRIBUTION(NormVar,
+DISTRIBUTION(var_norm,
     double costFunction(int start, int end){
-        return 5;
+        double lSum = this -> cumsum -> getLinearSum(start, end);
+        double sSum =  this -> cumsum -> getQuadraticSum(start, end);
+        int N = end - start + 1;
+        double mean = this -> cumsum -> getTotalMean(); // Fixed mean
+        double varN = (sSum - 2 * mean * lSum + N * pow(mean, 2)); // Variance of segment.
+        if(varN <= 0){  // Making sure the variance is not zero, so that the log does not raise an exception
+            varN = 0.00000000001;
+        }
+        return N * (log(2*M_PI) + log(varN/N) + 1);
     }
 )
 
-DISTRIBUTION(NormMeanVar,
+DISTRIBUTION(meanvar_norm,
     double costFunction(int start, int end){
         double lSum =  this -> cumsum -> getLinearSum(start, end);
         double sSum =  this -> cumsum -> getQuadraticSum(start, end);
         int N = end - start + 1;
-        double mean = lSum/N;
         double var = (sSum - (lSum*lSum/N))/N;
         if(var <= 0){  // Making sure the variance is not zero, so that the log does not raise an exception
             var = 0.00000000001;
