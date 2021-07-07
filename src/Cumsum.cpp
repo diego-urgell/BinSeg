@@ -26,7 +26,7 @@ public:
      * This init method computes the cumulative sum of the data array and stores it in a vector. It is virtual so that
      * it can be overridden in the CumsumSquared Class.
      * @param data The user input data
-     * @param length The length of the data array
+     * @param length The length of the data array.
      */
     virtual void init(const double *data, const int length) {
         this -> length = length;
@@ -65,8 +65,11 @@ public:
     double getTotalMean(){
         return this -> linearCumsum.back() / this -> length;
     }
-};
 
+    double getMean(int start, int end){
+        return this -> getLinearSum(start, end) / end - start + 1;
+    }
+};
 
 
 /**

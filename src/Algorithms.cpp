@@ -14,10 +14,10 @@
 // in order to register the algorithm in the factory using the class name. Also, in the construtor, the boolean
 // is_registered from Registration class is called in order to instantiate the template.
 #define ALGORITHM(SUBCLASS, BODY) \
-    class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {         \
+    class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {          \
     public:                                                                                                 \
         inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
-        SUBCLASS(){(void) is_registered;}                                                                          \
+        SUBCLASS(){(void) is_registered;}                                                                   \
         BODY                                                                                                \
     };
 
@@ -35,7 +35,9 @@ ALGORITHM(BS,
          this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen);
          for(int i = 0; i < this -> numCpts; i++){
              std::multiset<Segment>::iterator  optCpt = this -> candidates.begin();
-             this -> changepoints[i] = optCpt -> mid;
+             if (optCpt -> mid == 0) return;
+             this -> changepoints[i] = optCpt -> mid+1;
+             this -> dist -> calcParams(optCpt -> start, optCpt -> mid, optCpt -> end);
              this -> candidates.emplace(optCpt -> start, optCpt -> mid, this -> dist, this -> minSegLen);
              this -> candidates.emplace(optCpt -> mid + 1, optCpt -> end, this -> dist, this -> minSegLen);
              this -> candidates.erase(optCpt);

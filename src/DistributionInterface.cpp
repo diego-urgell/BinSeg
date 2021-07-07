@@ -54,6 +54,11 @@ public:
         double total = first + second;
         return total;
     }
+
+    virtual void calcParams(int start, int mid, int end){};
+
+    virtual std::vector<std::vector<double>> retParams() = 0;
+
 };
 
 /**

@@ -3,8 +3,8 @@ Type: Package
 Title: What the Package Does in One 'Title Case' Line
 Version: 1.0
 Date: 2021-06-10
-Author: Diego Enrique Jiménez Urgell
-Maintainer: Diego Enrique Jiménez Urgell <diegourgell0@gmail.com>
+Author: Diego Enrique Jimenez Urgell
+Maintainer: Diego Enrique Jimenez Urgell <diegourgell0@gmail.com>
 Description: One paragraph description of what the package does as one
         or more full sentences.
 License: GPL (>= 2)

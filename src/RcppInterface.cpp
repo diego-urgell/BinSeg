@@ -29,7 +29,11 @@ Rcpp::List binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String
     algo -> init(&data[0], data.size(), numCpts, dist, &cpts[0], minSegLen);
     algo -> binseg();
 
+    std::vector<std::vector<double>> params = dist -> retParams();
+
     return Rcpp::List::create(
-            Rcpp::Named("cpts", cpts)
+            Rcpp::Named("cpts", cpts),
+            Rcpp::Named("before_mean", Rcpp::wrap(params.at(0))),
+            Rcpp::Named("after_mean", Rcpp::wrap(params.at(1)))
             );
 }
