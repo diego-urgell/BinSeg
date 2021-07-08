@@ -16,8 +16,9 @@ public:
     std::shared_ptr<Distribution> dist;
     std::multiset<Segment> candidates;
     int length, numCpts, minSegLen;
-    int * changepoints;
-
+    std::vector<double> cpts;
+    std::vector<double> invalidates_index;
+    std::vector<double> invalidates_after;
 
 public:
 
@@ -40,15 +41,24 @@ public:
      * @param dist The distribution pointer to compute the costs.
      * @param changepoints The changepoints NumericVector.
      */
-    void init(double *data, int length, int numCpts, std::shared_ptr<Distribution> dist, int * changepoints, int minSegLen){
+    void init(double *data, int length, int numCpts, std::shared_ptr<Distribution> dist, int minSegLen){
         this -> dist = dist;
         this -> dist -> cumsum -> init(data, length);
         this -> length = length;
         this -> numCpts = numCpts;
         this -> minSegLen = minSegLen;
-        this -> changepoints = changepoints;
     }
+
+    std::vector<std::vector<double>> getParams(){
+        std::vector<std::vector<double>> params = {};
+        params.push_back(this ->  cpts);
+        params.push_back(this -> invalidates_index);
+        params.push_back(this -> invalidates_after);
+        return params;
+    }
+
 };
+
 
 /**
  * Instantiation of the GenericFactory template for the Algorithm interface.

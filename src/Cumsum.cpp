@@ -67,7 +67,7 @@ public:
     }
 
     double getMean(int start, int end){
-        return this -> getLinearSum(start, end) / end - start + 1;
+        return this -> getLinearSum(start, end) / (end - start + 1);
     }
 };
 

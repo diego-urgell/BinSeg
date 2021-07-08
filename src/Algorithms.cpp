@@ -36,7 +36,9 @@ ALGORITHM(BS,
          for(int i = 0; i < this -> numCpts; i++){
              std::multiset<Segment>::iterator  optCpt = this -> candidates.begin();
              if (optCpt -> mid == 0) return;
-             this -> changepoints[i] = optCpt -> mid+1;
+             this -> cpts.push_back(optCpt -> mid+1);
+             this -> invalidates_index.push_back(0);
+             this -> invalidates_after.push_back(0);
              this -> dist -> calcParams(optCpt -> start, optCpt -> mid, optCpt -> end);
              this -> candidates.emplace(optCpt -> start, optCpt -> mid, this -> dist, this -> minSegLen);
              this -> candidates.emplace(optCpt -> mid + 1, optCpt -> end, this -> dist, this -> minSegLen);

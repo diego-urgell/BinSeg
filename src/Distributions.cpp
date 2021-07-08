@@ -19,8 +19,6 @@ DISTRIBUTION(mean_norm,
     std::vector<double> before_mean;
     std::vector<double> after_mean;
 
-//    inline static std::vector<std::string> names = {"after_mean", "before_mean"};
-
     void setCumsum(){
         this -> cumsum = std::make_shared<Cumsum>();
     }
