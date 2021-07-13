@@ -18,6 +18,7 @@
 DISTRIBUTION(mean_norm,
     std::vector<double> before_mean;
     std::vector<double> after_mean;
+    static std::vector<std::string> param_names;
 
     void setCumsum(){
         this -> cumsum = std::make_shared<Cumsum>();
@@ -40,8 +41,13 @@ DISTRIBUTION(mean_norm,
         params.push_back(this -> after_mean);
         return params;
     }
+
+    std::vector<std::string> getParamNames(){
+        return mean_norm::param_names;
+    }
 )
 
+//std::vector<std::string> mean_norm::param_names = {"before_mean", "after_mean"};
 
 DISTRIBUTION(var_norm,
     std::vector<double> * after_var;
@@ -55,7 +61,7 @@ DISTRIBUTION(var_norm,
         int N = end - start + 1;
         double mean = this -> cumsum -> getTotalMean(); // Fixed mean
         double varN = (sSum - 2 * mean * lSum + N * pow(mean, 2)); // Variance of segment.
-        if(varN <= 0) return INF;
+        if(varN <= 0) return INFINITY;
         return N * (log(2*M_PI) + log(varN/N) + 1);
     }
 
@@ -79,7 +85,7 @@ DISTRIBUTION(meanvar_norm,
         double sSum =  this -> cumsum -> getQuadraticSum(start, end);
         int N = end - start + 1;
         double var = (sSum - (lSum*lSum/N))/N;
-        if(var <= 0) return INF;
+        if(var <= 0) return INFINITY;
         return N*(log(var) + log(2*M_PI) + 1);
     }
 

@@ -20,9 +20,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// binseg_info
+Rcpp::List binseg_info();
+RcppExport SEXP _BinSeg_binseg_info() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(binseg_info());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_BinSeg_binseg", (DL_FUNC) &_BinSeg_binseg, 5},
+    {"_BinSeg_binseg_info", (DL_FUNC) &_BinSeg_binseg_info, 0},
     {NULL, NULL, 0}
 };
 

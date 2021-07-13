@@ -3,6 +3,7 @@
 # Created by: diego.urgell
 # Created on: 24/06/21
 
+if(requireNamespace("changepoint"))
 library(testthat)
 library(BinSeg)
 
@@ -17,7 +18,7 @@ test_that(desc="Binary Segmentation + Change in mean: Test 1",{
 })
 
 test_that(desc="Binary Segmentation + Change in mean: Test 2",{
-  data  <-  c(rnorm(10, 300, 0), rnorm(10, 200, 0), rnorm(10, 100, 0))
+  data  <-  c(rnorm(10, 300, 10), rnorm(10, 200, 10), rnorm(10, 100, 10))
   ans <- BinSeg::binseg(data, "BS", "mean_norm", 2, 1)
   check_ans <- changepoint::cpt.mean(data=data, penalty="None", method="BinSeg", Q=1, test.stat="Normal")@cpts[1]
   expect_equal(ans[["cpts"]], check_ans)

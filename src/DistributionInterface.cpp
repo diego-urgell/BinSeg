@@ -59,6 +59,8 @@ public:
 
     virtual std::vector<std::vector<double>> retParams() = 0;
 
+    virtual std::vector<std::string> getParamNames(){return {};}
+
 };
 
 /**

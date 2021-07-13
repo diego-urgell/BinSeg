@@ -31,6 +31,8 @@ ALGORITHM(BS,
      * set will always be the optimal partition. To find more segments, just find the best split, store the info, and add
      * to the candidates multiset the two newly created segments.
      */
+     static std::vector<std::string> param_names;
+
      void binseg(){
          this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen);
          for(int i = 0; i < this -> numCpts; i++){
@@ -39,13 +41,19 @@ ALGORITHM(BS,
              this -> cpts.push_back(optCpt -> mid+1);
              this -> invalidates_index.push_back(0);
              this -> invalidates_after.push_back(0);
+             this -> cost.push_back(0);
              this -> dist -> calcParams(optCpt -> start, optCpt -> mid, optCpt -> end);
              this -> candidates.emplace(optCpt -> start, optCpt -> mid, this -> dist, this -> minSegLen);
              this -> candidates.emplace(optCpt -> mid + 1, optCpt -> end, this -> dist, this -> minSegLen);
              this -> candidates.erase(optCpt);
          }
      }
+
+     std::vector<std::string> getParamNames(){
+         return BS::param_names;
+     }
 )
+
 
 
 ALGORITHM(SeedBS,

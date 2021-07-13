@@ -16,9 +16,7 @@ public:
     std::shared_ptr<Distribution> dist;
     std::multiset<Segment> candidates;
     int length, numCpts, minSegLen;
-    std::vector<double> cpts;
-    std::vector<double> invalidates_index;
-    std::vector<double> invalidates_after;
+    std::vector<double> cpts, invalidates_index, invalidates_after, cost;
 
 public:
 
@@ -54,8 +52,12 @@ public:
         params.push_back(this ->  cpts);
         params.push_back(this -> invalidates_index);
         params.push_back(this -> invalidates_after);
+        params.push_back(this -> cost);
         return params;
     }
+
+    virtual std::vector<std::string> getParamNames(){return {};}
+
 
 };
 
