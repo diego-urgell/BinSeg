@@ -69,6 +69,10 @@ public:
     double getMean(int start, int end){
         return this -> getLinearSum(start, end) / (end - start + 1);
     }
+
+    virtual double getVarianceN(int start, int end, bool fixedMean){
+        throw "No variance with linear cumsum";
+    }
 };
 
 
@@ -120,5 +124,14 @@ public:
         if (start > end || start < 0) throw "Index Error";
         if (start == 0) return quadraticCumsum[end];
         return quadraticCumsum[end] - quadraticCumsum[start - 1];
+    }
+
+    double getVarianceN(int start, int end, bool fixedMean){
+        double lSum = this -> getLinearSum(start, end);
+        double sSum =  this ->  getQuadraticSum(start, end);
+        int N = end - start + 1;
+        double mean = fixedMean ? this -> getTotalMean() : this -> getMean(start, end); // Fixed mean
+        double varN = (sSum - 2 * mean * lSum + N * pow(mean, 2)); // Variance of segment.
+        return varN;
     }
 };
