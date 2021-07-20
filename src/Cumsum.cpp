@@ -40,7 +40,7 @@ public:
 
     /**
      * This function allows to compute the cumulative sum from an start to end index in constant time, by
-     * retrieving the values from the cumsum vector.
+     * retrieving the values from the summaryStatistics vector.
      * @param start inclusive
      * @param end inclusive
      * @return The Linear cumulative sum from start to end.
@@ -52,7 +52,7 @@ public:
     }
 
     /**
-     * As this is Linear Cumsum, the method to get a quadratic cumsum should not be called, so it throws an exception.
+     * As this is Linear Cumsum, the method to get a quadratic summaryStatistics should not be called, so it throws an exception.
      * However, it is virtual so it can be overridden in the CumusmSquared Class.
      * @param start inclusive
      * @param end inclusive
@@ -71,7 +71,7 @@ public:
     }
 
     virtual double getVarianceN(int start, int end, bool fixedMean){
-        throw "No variance with linear cumsum";
+        throw "No variance with linear summaryStatistics";
     }
 };
 

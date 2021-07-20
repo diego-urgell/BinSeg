@@ -52,7 +52,7 @@ public:
                 this -> mid = i;
             }
         }
-        this -> bestDecrease = bestSplitCost - this -> costNoSplit;
+        this -> bestDecrease = this -> costNoSplit - bestSplitCost;
     }
 
     /**
@@ -63,7 +63,7 @@ public:
      * @return bool
      */
     friend bool operator < (const Segment& l, const Segment& r){
-        return l.bestDecrease < r.bestDecrease;
+        return l.bestDecrease > r.bestDecrease;
     }
 
 };

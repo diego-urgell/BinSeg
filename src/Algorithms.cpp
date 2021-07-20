@@ -35,14 +35,19 @@ ALGORITHM(BS,
 
      void binseg(){
          this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen);
-         for(int i = 0; i < this -> numCpts; i++){
-             std::multiset<Segment>::iterator  optCpt = this -> candidates.begin();
+         int sep = this -> numCpts + 1;
+         this -> param_mat[0] = this -> length;
+         this -> param_mat[sep] = 0;
+         this -> param_mat[sep * 2] = 0;
+         this -> param_mat[sep * 3] = this -> dist -> costFunction(0, this -> length - 1);
+         for(int i = 1; i <= this -> numCpts; i++){
+             std::multiset<Segment>::iterator optCpt = this -> candidates.begin();
              if (optCpt -> mid == 0) return;
-             this -> cpts.push_back(optCpt -> mid+1);
-             this -> invalidates_index.push_back(0);
-             this -> invalidates_after.push_back(0);
-             this -> cost.push_back(0);
-             this -> dist -> calcParams(optCpt -> start, optCpt -> mid, optCpt -> end);
+             this -> param_mat[i] = optCpt -> mid + 1;
+             this -> param_mat[sep + i] = 0;
+             this -> param_mat[sep * 2 + i] = 0;
+             this -> param_mat[sep * 3 + i] = param_mat[sep * 3 + i - 1] - optCpt -> bestDecrease;
+             this -> dist -> calcParams(optCpt -> start, optCpt -> mid, optCpt -> end, i, this -> param_mat, sep);
              this -> candidates.emplace(optCpt -> start, optCpt -> mid, this -> dist, this -> minSegLen);
              this -> candidates.emplace(optCpt -> mid + 1, optCpt -> end, this -> dist, this -> minSegLen);
              this -> candidates.erase(optCpt);
@@ -50,21 +55,23 @@ ALGORITHM(BS,
      }
 
      std::vector<std::string> getParamNames(){
-         return BS::param_names;
+         std::vector<std::string> names = BS::param_names;
+         std::vector<std::string> param_names = this -> dist -> getParamNames();
+         names.insert(names.end(), param_names.begin(), param_names.end());
+         return names;
      }
 )
 
 
-
-ALGORITHM(SeedBS,
-    void binseg(){
-
-    }
-)
-
-
-ALGORITHM(WildBS,
-    void binseg(){
-
-    }
-)
+//ALGORITHM(SeedBS,
+//    void binseg(){
+//
+//    }
+//)
+//
+//
+//ALGORITHM(WildBS,
+//    void binseg(){
+//
+//    }
+//)

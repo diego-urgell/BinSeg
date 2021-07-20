@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // binseg
-Rcpp::List binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen);
+Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen);
 RcppExport SEXP _BinSeg_binseg(SEXP dataSEXP, SEXP algorithmSEXP, SEXP distributionSEXP, SEXP numCptsSEXP, SEXP minSegLenSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

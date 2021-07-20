@@ -13,39 +13,21 @@ std::vector<std::string> meanvar_norm::param_names = {"before_mean", "after_mean
 std::vector<std::string> BS::param_names = {"cpts", "invalidates_index", "invalidates_after", "cost"};
 
 
-
 // [[Rcpp::export]]
-Rcpp::List binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen = 1){
+Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen = 1){
 
     std::shared_ptr<Distribution> dist = DistributionFactory::Create(distribution);
     std::shared_ptr<Algorithm> algo = AlgorithmFactory::Create(algorithm);
 
+    Rcpp::NumericMatrix params_mat = Rcpp::NumericMatrix(numCpts + 1, dist -> getParamCount() + 4);
+
     dist -> setCumsum();
-    algo -> init(&data[0], data.size(), numCpts, dist, minSegLen);
+    algo -> init(&data[0], data.size(), numCpts, dist, minSegLen, &params_mat[0]);
     algo -> binseg();
 
-    std::vector<std::string> names = algo -> getParamNames();
-    std::vector<std::string> param_names = dist -> getParamNames();
-    names.insert(names.end(), param_names.begin(), param_names.end());
+    Rcpp::colnames(params_mat) = Rcpp::wrap(algo -> getParamNames());
 
-    Rcpp::CharacterVector names_vec = Rcpp::wrap(names);
-
-    std::vector<std::vector<double>> cpts_vec = algo -> getParams();
-    std::vector<std::vector<double>> params_vec = dist -> retParams();
-    cpts_vec.insert(cpts_vec.end(), params_vec.begin(), params_vec.end());
-
-    int rows = cpts_vec[0].size(), cols = cpts_vec.size();
-    Rcpp::NumericMatrix params_mat = Rcpp::NumericMatrix(rows, cols);
-    Rcpp::colnames(params_mat) = names_vec;
-
-    for(int i = 0; i < cols; i++){
-        Rcpp::NumericVector tmp = Rcpp::wrap(cpts_vec[i]);
-        params_mat.column(i) = tmp;
-    }
-
-    return Rcpp::List::create(
-            Rcpp::Named("params", params_mat)
-            );
+    return params_mat;
 }
 
 
