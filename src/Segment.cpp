@@ -13,7 +13,7 @@ class Segment {
 
 public:
 
-    int start, mid, end;
+    int start, mid, end, minSegLen;
     double bestDecrease, costNoSplit;
     bool invalidatesAfter;
     int invalidatesIndex; // TODO
@@ -28,11 +28,12 @@ public:
      * @param end inclusive
      * @param dist A Distribution pointer to get the cost of partition.
      */
-    Segment(int start, int end, std::shared_ptr<Distribution> dist){
+    Segment(int start, int end, std::shared_ptr<Distribution> dist, int minSegLen){
         this -> start = start;
         this -> end = end;
         this -> mid = 0;
         this -> dist = dist;
+        this -> minSegLen = minSegLen;
         this -> costNoSplit = this -> dist -> costFunction(start, end); // The cost of the whole segment
         this -> optimalPartition(); // Immediately find the best partition
     }
@@ -44,14 +45,14 @@ public:
      */
     void optimalPartition(){
         double bestSplitCost = std::numeric_limits<double>::max(), currSplitCost;
-        for(int i = this -> start + 1; i < this -> end; i++){
+        for(int i = this -> start + minSegLen; i <= this -> end - this -> minSegLen; i++){
             currSplitCost = this -> dist -> getCost(this -> start, i, this -> end);
             if (currSplitCost < bestSplitCost){
                 bestSplitCost = currSplitCost;
                 this -> mid = i;
             }
         }
-        this -> bestDecrease = bestSplitCost - this -> costNoSplit;
+        this -> bestDecrease = this -> costNoSplit - bestSplitCost;
     }
 
     /**
@@ -62,7 +63,7 @@ public:
      * @return bool
      */
     friend bool operator < (const Segment& l, const Segment& r){
-        return l.bestDecrease < r.bestDecrease;
+        return l.bestDecrease > r.bestDecrease;
     }
 
 };

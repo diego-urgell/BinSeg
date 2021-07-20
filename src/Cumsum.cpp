@@ -14,6 +14,7 @@ class Cumsum {
 protected:
 
     std::vector<double> linearCumsum;
+    int length;
 
 public:
 
@@ -25,9 +26,10 @@ public:
      * This init method computes the cumulative sum of the data array and stores it in a vector. It is virtual so that
      * it can be overridden in the CumsumSquared Class.
      * @param data The user input data
-     * @param length The length of the data array
+     * @param length The length of the data array.
      */
     virtual void init(const double *data, const int length) {
+        this -> length = length;
         double currTotal = 0;
         this -> linearCumsum.resize(length);
         for(int i = 0; i < length; i++){
@@ -38,7 +40,7 @@ public:
 
     /**
      * This function allows to compute the cumulative sum from an start to end index in constant time, by
-     * retrieving the values from the cumsum vector.
+     * retrieving the values from the summaryStatistics vector.
      * @param start inclusive
      * @param end inclusive
      * @return The Linear cumulative sum from start to end.
@@ -50,7 +52,7 @@ public:
     }
 
     /**
-     * As this is Linear Cumsum, the method to get a quadratic cumsum should not be called, so it throws an exception.
+     * As this is Linear Cumsum, the method to get a quadratic summaryStatistics should not be called, so it throws an exception.
      * However, it is virtual so it can be overridden in the CumusmSquared Class.
      * @param start inclusive
      * @param end inclusive
@@ -59,8 +61,19 @@ public:
     virtual double getQuadraticSum(int start, int end){
         throw "No quadratic sum in LinearCumsum";
     }
-};
 
+    double getTotalMean(){
+        return this -> linearCumsum.back() / this -> length;
+    }
+
+    double getMean(int start, int end){
+        return this -> getLinearSum(start, end) / (end - start + 1);
+    }
+
+    virtual double getVarianceN(int start, int end, bool fixedMean){
+        throw "No variance with linear summaryStatistics";
+    }
+};
 
 
 /**
@@ -91,6 +104,7 @@ public:
         double currSquaredTotal = 0;
         this -> linearCumsum.resize(length);
         this -> quadraticCumsum.resize(length);
+        this -> length = length;
         for(int i = 0; i < length; i++){
             currLinearTotal += data[i];
             currSquaredTotal += pow(data[i], 2);
@@ -110,5 +124,14 @@ public:
         if (start > end || start < 0) throw "Index Error";
         if (start == 0) return quadraticCumsum[end];
         return quadraticCumsum[end] - quadraticCumsum[start - 1];
+    }
+
+    double getVarianceN(int start, int end, bool fixedMean){
+        double lSum = this -> getLinearSum(start, end);
+        double sSum =  this ->  getQuadraticSum(start, end);
+        int N = end - start + 1;
+        double mean = fixedMean ? this -> getTotalMean() : this -> getMean(start, end); // Fixed mean
+        double varN = (sSum - 2 * mean * lSum + N * pow(mean, 2)); // Variance of segment.
+        return varN;
     }
 };

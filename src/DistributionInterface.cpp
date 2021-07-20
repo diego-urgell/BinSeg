@@ -15,7 +15,7 @@ class Distribution{
 
 public:
 
-    std::shared_ptr<Cumsum> cumsum; // Pointer to Cumsum object, which may also be CumsumSquared
+    std::shared_ptr<Cumsum> summaryStatistics; // Pointer to Cumsum object, which may also be CumsumSquared
 
     Distribution() = default;
 
@@ -23,16 +23,16 @@ public:
 
     /**
      * This method creates the setCumsum, and it should be called in order to initialize the Distribution object. Note
-     * that this does not initialize the cumsum, since the data is not yet provided.
+     * that this does not initialize the summaryStatistics, since the data is not yet provided.
      */
     virtual void setCumsum(){
-        cumsum = std::make_shared<CumsumSquared>();
+        summaryStatistics = std::make_shared<CumsumSquared>();
     }
 
     /**
      * This is the specific implementation of the cost function, and it completely depends on each of the distributions.
      * It is key method of this interface and should be implemented by any subclass. It calculates the cost of a segment
-     * given start and end indexes. Note that the cumsum object must have been initialized first (see Algorithm::init())
+     * given start and end indexes. Note that the summaryStatistics object must have been initialized first (see Algorithm::init())
      * For the implementation, you must provide the negative log-likelihood of the specific distribution,
      * @param start inclusive
      * @param end inclusive
@@ -51,8 +51,16 @@ public:
     double getCost(int start, int mid, int end){
         double first = this -> costFunction(start, mid);
         double second = this -> costFunction(mid+1, end);
-        return first + second;
+        double total = first + second;
+        return total;
     }
+
+    virtual void calcParams(int start, int mid, int end, int i, double * params_mat, int cpts) = 0;
+
+    virtual std::vector<std::string> getParamNames() = 0;
+
+    virtual int getParamCount() = 0;
+
 };
 
 /**
