@@ -3,7 +3,7 @@
 # Created by: diego.urgell
 # Created on: 24/06/21
 
-if(requireNamespace("changepoint"))
+if(requireNamespace("changepoint", "gfpop"))
 library(testthat)
 library(BinSeg)
 
@@ -92,5 +92,41 @@ test_that(desc="Binary Segmentation + Change in mean and variace: Test 4 - Big v
   data  <-  rnorm(100000, 500, 100)
   ans <- BinSeg::binseg(data, "BS", "var_norm", 500, 2)
   check_ans <- changepoint::cpt.var(data=data, penalty="None", method="BinSeg", Q=500, test.stat="Normal")@cpts
+  expect_equal(sort(ans[,"cpts"]), check_ans)
+})
+
+
+test_that(desc="Binary Segmentation + Negbin change in probability of success: Test 1 - Single changepoint", {
+  data <- gfpop::dataGenerator(n=400, changepoints=c(0.50,  1), parameters=c(0.2, 0.65), type="negbin", size=50)
+  graph <- gfpop::graph(
+    gfpop::Edge(0, 1,"std", 0),
+    gfpop::Edge(0, 0, "null"),
+    gfpop::Edge(1, 1, "null"),
+    gfpop::StartEnd(start = 0, end = 1)
+  )
+  ans <- BinSeg::binseg(data, "BS", "negbin", 1, 2)
+  check_ans <- gfpop::gfpop(data = data, mygraph = graph, type = "negbin")$changepoints
+  expect_equal(sort(ans[,"cpts"]), check_ans)
+})
+
+test_that(desc="Binary Segmentation + Negbin change in probability of success: Test 2 - Several changepoints", {
+  piece1 <- gfpop::dataGenerator(n=100, changepoints=1, parameters=0.5, type="negbin", size=25)
+  piece2 <- gfpop::dataGenerator(n=100, changepoints=1, parameters=0.5, type="negbin", size=50)
+  piece3 <- gfpop::dataGenerator(n=100, changepoints=1, parameters=0.5, type="negbin", size=75)
+  piece4 <- gfpop::dataGenerator(n=100, changepoints=1, parameters=0.5, type="negbin", size=100)
+
+  data <- c(piece1, piece2, piece3, piece4)
+  graph <- gfpop::graph(
+    gfpop::Edge(0, 1,"std", 0),
+    gfpop::Edge(1, 2, "std", 0),
+    gfpop::Edge(2, 3, "std", 0),
+    gfpop::Edge(0, 0, "null"),
+    gfpop::Edge(1, 1, "null"),
+    gfpop::Edge(2, 2, "null"),
+    gfpop::Edge(3, 3, "null"),
+    gfpop::StartEnd(start = 0, end = 3)
+  )
+  ans <- BinSeg::binseg(data, "BS", "negbin", 3, 2)
+  check_ans <- gfpop::gfpop(data = data, mygraph = graph, type = "negbin")$changepoints
   expect_equal(sort(ans[,"cpts"]), check_ans)
 })
