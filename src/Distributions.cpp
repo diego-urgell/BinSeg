@@ -106,7 +106,7 @@ DISTRIBUTION(meanvar_norm,
 DISTRIBUTION(negbin,
 
     double costFunction(int start, int end){
-        double lSum = this -> summaryStatistics ->getLinearSum(start, end);
+        double lSum = this -> summaryStatistics -> getLinearSum(start, end);
         double mean = this -> summaryStatistics -> getMean(start, end);
         double varN = this -> summaryStatistics -> getVarianceN(start, end, false);
         int N = end - start + 1;
@@ -114,16 +114,14 @@ DISTRIBUTION(negbin,
         double var = varN/N;
         double r_dispersion = ceil(fabs(pow(mean, 2)/(var-mean)));
         double p_success = mean/var;
-        double cost = lSum * log(1-p_success) + N * r_dispersion * log(p_success);
-        return cost;
+        return (lSum * log(1-p_success) + N * r_dispersion * log(p_success));
     }
 
     void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
-        int N = end - start + 1;
         double meanLeft = this -> summaryStatistics -> getMean(start, mid);
         double meanRight = this -> summaryStatistics -> getMean(mid + 1, end);
-        double varLeft = this -> summaryStatistics -> getVarianceN(start, mid, false)/N;
-        double varRight = this -> summaryStatistics -> getVarianceN(mid + 1, end, false)/N;
+        double varLeft = this -> summaryStatistics -> getVarianceN(start, mid, false)/(mid - start + 1);
+        double varRight = this -> summaryStatistics -> getVarianceN(mid + 1, end, false)/(end - mid + 1);
         double probLeft = meanLeft/varLeft;
         double probRight = meanRight/varRight;
 
@@ -141,19 +139,34 @@ DISTRIBUTION(negbin,
 )
 
 
-//
-//DISTRIBUTION(Poisson,
-//    double costFunction(int start, int end){
-//        return 5;
-//    }
-//
-//    std::vector<std::vector<double>>  retParams(){
-//        std::vector<std::vector<double>> params;
-//        return params;
-//    }
-//)
-//
-//
+
+DISTRIBUTION(poisson,
+
+    double costFunction(int start, int end){
+        double rate = this -> summaryStatistics -> getMean(start, end);
+        double lSum = this -> summaryStatistics -> getLinearSum(start, end);
+        int N = end - start + 1;
+        return - lSum * log(rate) + N * rate;
+    }
+
+    void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
+        double rateLeft = this -> summaryStatistics -> getMean(start, mid);
+        double rateRight = this -> summaryStatistics -> getMean(mid + 1, end);
+
+        param_mat[i + cpts * 4] = rateLeft;
+        param_mat[i + cpts * 5] = rateRight;
+    }
+
+    std::vector<std::string> getParamNames(){
+        return poisson::param_names;
+    }
+
+    int getParamCount(){
+        return 2;
+    }
+)
+
+
 
 //
 //
