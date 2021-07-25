@@ -155,3 +155,25 @@ test_that(desc="BinarySegmentation + Poisson change in rate: Test 4 - No changep
   check_ans <- changepoint::cpt.meanvar(data=data, penalty="None", method="BinSeg", Q=1000, test.stat="Poisson")@cpts
   expect_equal(sort(ans[,"cpts"]), check_ans)
 })
+
+test_that(desc="BinarySegmetation + Exponential change in rate: Test 1 - Single changepoint", {
+  data <- gfpop::dataGenerator(n = 400, changepoints = c(0.5, 1), parameters=c(10, 40), type="exp")
+  ans <- BinSeg::binseg(data, "BS", "exponential", 1, 2)
+  check_ans <- changepoint::cpt.meanvar(data=data, penalty="None", method="BinSeg", Q=1, test.stat="Exponential")@cpts
+  expect_equal(sort(ans[,"cpts"]), check_ans)
+})
+
+test_that(desc="BinarySegmentation + Exponential change in rate: Test 2- Several changepoints", {
+  data <- gfpop::dataGenerator(n=1000, changepoints=c(0.1, 0.23, 0.38, 0.5, 0.66, 0.82, 1),
+                               parameters=c(10, 5, 15, 10, 50, 25, 35), type="exp")
+  ans <- BinSeg::binseg(data, "BS", "exponential", 6, 2)
+  check_ans <- changepoint::cpt.meanvar(data=data, penalty="None", method="BinSeg", Q=6, test.stat="Exponential")@cpts
+  expect_equal(sort(ans[,"cpts"]), check_ans)
+})
+
+test_that(desc="BinarySegmentation + Exponential change in rate: Test 4 - No changepoint", {
+  data <- gfpop::dataGenerator(n=10000, changepoints=1, parameters=50, type="exp")
+  ans <- BinSeg::binseg(data, "BS", "exponential", 1000, 2)
+  check_ans <- changepoint::cpt.meanvar(data=data, penalty="None", method="BinSeg", Q=1000, test.stat="Exponential")@cpts
+  expect_equal(sort(ans[,"cpts"]), check_ans)
+})

@@ -112,7 +112,7 @@ DISTRIBUTION(negbin,
         int N = end - start + 1;
         if (varN <= 0) return INFINITY;
         double var = varN/N;
-        double r_dispersion = ceil(fabs(pow(mean, 2)/(var-mean)));
+        double r_dispersion = fabs(pow(mean, 2)/(var-mean));
         double p_success = mean/var;
         return (lSum * log(1-p_success) + N * r_dispersion * log(p_success));
     }
@@ -137,7 +137,6 @@ DISTRIBUTION(negbin,
         return 2;
     }
 )
-
 
 
 DISTRIBUTION(poisson,
@@ -167,16 +166,29 @@ DISTRIBUTION(poisson,
 )
 
 
+DISTRIBUTION(exponential,
+    double costFunction(int start, int end){
+        int T = end - start + 1;
+        double lSum = this -> summaryStatistics -> getLinearSum(start, end);
+        double rate = T / lSum;
+        return rate * lSum - T * log(rate);
+    }
 
-//
-//
-//DISTRIBUTION(Exponential,
-//    double costFunction(int start, int end){
-//        return 5;
-//    }
-//
-//            std::vector<std::vector<double>>  retParams(){
-//                std::vector<std::vector<double>> params;
-//                return params;
-//            }
-//)
+    void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
+        double lSumLeft = this -> summaryStatistics -> getLinearSum(start, mid);
+        double lSumRight = this -> summaryStatistics -> getLinearSum(mid + 1, end);
+        double rateLeft = (mid - start + 1) / lSumLeft;
+        double rateRight = (end - mid + 1) / lSumRight;
+
+        param_mat[i + cpts * 4] = rateLeft;
+        param_mat[i + cpts * 5] = rateRight;
+    }
+
+    std::vector<std::string> getParamNames(){
+        return poisson::param_names;
+    }
+
+    int getParamCount(){
+        return 2;
+    }
+)

@@ -15,8 +15,7 @@ public:
 
     int start, mid, end, minSegLen;
     double bestDecrease, costNoSplit;
-    bool invalidatesAfter;
-    int invalidatesIndex;
+    int invalidatesIndex, invalidatesAfter;
     std::shared_ptr<Distribution> dist; // In order to calculate the costs.
 
 public:
@@ -28,7 +27,7 @@ public:
      * @param end inclusive
      * @param dist A Distribution pointer to get the cost of partition.
      */
-    Segment(int start, int end, std::shared_ptr<Distribution> dist, int minSegLen, bool invalidatesAfter, int invalidatesIndex){
+    Segment(int start, int end, std::shared_ptr<Distribution> dist, int minSegLen, int invalidatesAfter, int invalidatesIndex){
         this -> start = start;
         this -> end = end;
         this -> mid = 0;

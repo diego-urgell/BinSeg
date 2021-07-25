@@ -11,6 +11,7 @@ std::vector<std::string> var_norm::param_names = {"before_var", "after_var"};
 std::vector<std::string> meanvar_norm::param_names = {"before_mean", "after_mean", " before_var", "after_var"};
 std::vector<std::string> negbin::param_names = {"before_prob", "after_prob"};
 std::vector<std::string> poisson::param_names = {"before_rate", "after_rate"};
+std::vector<std::string> exponential::param_names = {"before_rate", "after_rate"};
 
 std::vector<std::string> BS::param_names = {"cpts", "invalidates_index", "invalidates_after", "cost"};
 
