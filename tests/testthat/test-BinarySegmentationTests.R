@@ -67,7 +67,7 @@ test_that(desc="Binary Segmentation + Change in mean and variace: Test 5 - Big v
 })
 
 test_that(desc="Binary Segmentation + Change in variace: Test 1 - Single Changepoint", {
-  data  <-  c(rnorm(10, 100, 100), rnorm(10, 100, 0))
+  data  <-  c(rnorm(10, 100, 100), rnorm(10, 100, 5))
   ans <- BinSeg::binseg(data, "BS", "var_norm", 1, 2)
   check_ans <- changepoint::cpt.var(data=data, penalty="None", method="BinSeg", Q=1, test.stat="Normal")@cpts
   expect_equal(sort(ans[,"cpts"]), check_ans)
