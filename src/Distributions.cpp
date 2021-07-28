@@ -8,14 +8,13 @@
     class SUBCLASS: public Distribution, public Registration<SUBCLASS, Distribution, DistributionFactory> { \
     public:                                                                                                 \
         inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
-        SUBCLASS(){(void) is_registered;}                                                                          \
+        static std::vector<std::string> param_names;                                                        \
+        SUBCLASS(){(void) is_registered;}                                                                   \
         BODY                                                                                                \
     };
 
 
 DISTRIBUTION(mean_norm,
-
-    static std::vector<std::string> param_names;
 
     void setCumsum(){
         this -> summaryStatistics = std::make_shared<Cumsum>();
@@ -44,7 +43,6 @@ DISTRIBUTION(mean_norm,
 
 
 DISTRIBUTION(var_norm,
-    static std::vector<std::string> param_names;
 
     double costFunction(int start, int end){
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
@@ -74,15 +72,14 @@ DISTRIBUTION(var_norm,
 )
 
 DISTRIBUTION(meanvar_norm,
-    static std::vector<std::string> param_names;
 
     double costFunction(int start, int end){
         double lSum =  this -> summaryStatistics -> getLinearSum(start, end);
         double sSum =  this -> summaryStatistics -> getQuadraticSum(start, end);
         int N = end - start + 1;
-        double var = (sSum - (lSum*lSum/N))/N;
-        if(var <= 0) return INFINITY;
-        return N*(log(var) + log(2*M_PI) + 1);
+        double varN = (sSum - (lSum*lSum/N));
+        if(varN <= 0) return INFINITY;
+        return N*(log(varN/N) + log(2*M_PI) + 1);
     }
 
     void calcParams(int start, int mid, int end, int i,  double * param_mat, int cpts){
@@ -106,38 +103,92 @@ DISTRIBUTION(meanvar_norm,
     }
 )
 
-//
-//DISTRIBUTION(Poisson,
-//    double costFunction(int start, int end){
-//        return 5;
-//    }
-//
-//    std::vector<std::vector<double>>  retParams(){
-//        std::vector<std::vector<double>> params;
-//        return params;
-//    }
-//)
-//
-//
-//DISTRIBUTION(Negbin,
-//    double costFunction(int start, int end){
-//        return 5;
-//    }
-//
-//            std::vector<std::vector<double>>  retParams(){
-//                std::vector<std::vector<double>> params;
-//                return params;
-//            }
-//)
-//
-//
-//DISTRIBUTION(Exponential,
-//    double costFunction(int start, int end){
-//        return 5;
-//    }
-//
-//            std::vector<std::vector<double>>  retParams(){
-//                std::vector<std::vector<double>> params;
-//                return params;
-//            }
-//)
+DISTRIBUTION(negbin,
+
+    double costFunction(int start, int end){
+        double lSum = this -> summaryStatistics -> getLinearSum(start, end);
+        double mean = this -> summaryStatistics -> getMean(start, end);
+        double varN = this -> summaryStatistics -> getVarianceN(start, end, false);
+        int N = end - start + 1;
+        if (varN <= 0) return INFINITY;
+        double var = varN/N;
+        double r_dispersion = fabs(pow(mean, 2)/(var-mean));
+        double p_success = mean/var;
+        return (lSum * log(1-p_success) + N * r_dispersion * log(p_success));
+    }
+
+    void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
+        double meanLeft = this -> summaryStatistics -> getMean(start, mid);
+        double meanRight = this -> summaryStatistics -> getMean(mid + 1, end);
+        double varLeft = this -> summaryStatistics -> getVarianceN(start, mid, false)/(mid - start + 1);
+        double varRight = this -> summaryStatistics -> getVarianceN(mid + 1, end, false)/(end - mid + 1);
+        double probLeft = meanLeft/varLeft;
+        double probRight = meanRight/varRight;
+
+        param_mat[i + cpts * 4] = probLeft;
+        param_mat[i + cpts * 5] = probRight;
+    }
+
+    std::vector<std::string> getParamNames(){
+        return negbin::param_names;
+    }
+
+    int getParamCount(){
+        return 2;
+    }
+)
+
+
+DISTRIBUTION(poisson,
+
+    double costFunction(int start, int end){
+        double rate = this -> summaryStatistics -> getMean(start, end);
+        double lSum = this -> summaryStatistics -> getLinearSum(start, end);
+        int N = end - start + 1;
+        return - lSum * log(rate) + N * rate;
+    }
+
+    void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
+        double rateLeft = this -> summaryStatistics -> getMean(start, mid);
+        double rateRight = this -> summaryStatistics -> getMean(mid + 1, end);
+
+        param_mat[i + cpts * 4] = rateLeft;
+        param_mat[i + cpts * 5] = rateRight;
+    }
+
+    std::vector<std::string> getParamNames(){
+        return poisson::param_names;
+    }
+
+    int getParamCount(){
+        return 2;
+    }
+)
+
+
+DISTRIBUTION(exponential,
+    double costFunction(int start, int end){
+        int T = end - start + 1;
+        double lSum = this -> summaryStatistics -> getLinearSum(start, end);
+        double rate = T / lSum;
+        return rate * lSum - T * log(rate);
+    }
+
+    void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
+        double lSumLeft = this -> summaryStatistics -> getLinearSum(start, mid);
+        double lSumRight = this -> summaryStatistics -> getLinearSum(mid + 1, end);
+        double rateLeft = (mid - start + 1) / lSumLeft;
+        double rateRight = (end - mid + 1) / lSumRight;
+
+        param_mat[i + cpts * 4] = rateLeft;
+        param_mat[i + cpts * 5] = rateRight;
+    }
+
+    std::vector<std::string> getParamNames(){
+        return poisson::param_names;
+    }
+
+    int getParamCount(){
+        return 2;
+    }
+)
