@@ -8,14 +8,14 @@ library(methods)
 setClass("BinSeg",
          slots=c(
            data="numeric",
-           summary="matrix",
+           models_summary="matrix",
            algorithm="character",
            distribution="character",
            min_seg_len="numeric"
          ),
          prototype=list(
            data=NA_real_,
-           summary=matrix(),
+           models_summary=matrix(),
            algorithm=NA_character_,
            distribution=NA_character_,
            min_seg_len=NA_integer_
@@ -39,33 +39,33 @@ setMethod("dist", "BinSeg", function(object) object@distribution)
 
 setMethod("cpts", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
   validateSegments(ncpts)
-  cpts <- object@summary[, "cpts"][ncpts]
+  cpts <- object@models_summary[, "cpts"][ncpts]
   return(cpts)
 })
 
 setMethod("coef", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
-  object@summary
+  object@models_summary
 })
 
 setMethod("logLik", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
   validateSegments(ncpts)
-  cpts <- object@summary[, "cost"][ncpts]
+  cpts <- object@models_summary[, "cost"][ncpts]
   return(cpts)
 })
 
 setMethod("show", "BinSeg", function(object){
-  object@summary
+  object@models_summary
 })
 
 validateSegments <- function(segments){
-  max_index <- nrow(object@summary)
+  max_index <- nrow(object@models_summary)
   if(!(
     is.integer(segments) &&
       0<length(segments) &&
       all(is.finite(segments) & 0<segments & segments <= max_index)
   )){
     stop(
-      "segments must be a vector of unique integers between 1 and ",
+      "Segments must be a vector of unique integers between 1 and ",
       max_index)
   }
 }
