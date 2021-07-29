@@ -10,18 +10,20 @@ setClass("BinSeg",
            data="numeric",
            summary="matrix",
            algorithm="character",
-           distribution="character"
+           distribution="character",
+           min_seg_len="numeric"
          ),
          prototype=list(
            data=NA_real_,
            summary=matrix(),
            algorithm=NA_character_,
-           distribution=NA_character_
+           distribution=NA_character_,
+           min_seg_len=NA_integer_
          )
 )
 
 setValidity("BinSeg", function(object){
-  TRUE
+
 })
 
 setGeneric("algo", function(object) standardGeneric("algo"), signature="object")
@@ -36,8 +38,9 @@ setMethod("algo", "BinSeg", function(object) object@algorithm)
 setMethod("dist", "BinSeg", function(object) object@distribution)
 
 setMethod("cpts", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
+  validateSegments(ncpts)
   cpts <- object@summary[, "cpts"][ncpts]
-  cpts
+  return(cpts)
 })
 
 setMethod("coef", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
@@ -45,10 +48,24 @@ setMethod("coef", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@s
 })
 
 setMethod("logLik", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
+  validateSegments(ncpts)
   cpts <- object@summary[, "cost"][ncpts]
-  cpts
+  return(cpts)
 })
 
 setMethod("show", "BinSeg", function(object){
   object@summary
 })
+
+validateSegments <- function(segments){
+  max_index <- nrow(object@summary)
+  if(!(
+    is.integer(segments) &&
+      0<length(segments) &&
+      all(is.finite(segments) & 0<segments & segments <= max_index)
+  )){
+    stop(
+      "segments must be a vector of unique integers between 1 and ",
+      max_index)
+  }
+}

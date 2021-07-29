@@ -35,22 +35,31 @@ Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcp
 
 
 // [[Rcpp::export]]
-Rcpp::List binseg_info(){
-
-    std::vector<std::string> namesDist =  std::vector<std::string>();
+Rcpp::CharacterMatrix distributions_info(){
+    Rcpp::CharacterMatrix infoDist(DistributionFactory::regSpecs.size(), 2);
+    int counter = 0;
     for (auto it = DistributionFactory::regSpecs.begin(); it != DistributionFactory::regSpecs.end(); it++){
-        namesDist.push_back(it -> first);
+        infoDist(counter, 0) = it -> first;
+        infoDist(counter, 1) = DistributionFactory::regDescs[it -> first];
+        counter++;
     }
+    Rcpp::CharacterVector names = {"distribution", "description"};
+    Rcpp::colnames(infoDist) = names;
+    return infoDist;
+}
 
+// [[Rcpp::export]]
+Rcpp::CharacterMatrix algorithms_info(){
+    Rcpp::CharacterMatrix infoAlgo(AlgorithmFactory::regSpecs.size(), 2);
+    int counter = 0;
     std::vector<std::string> namesAlgo =  std::vector<std::string>();
     for (auto it = AlgorithmFactory::regSpecs.begin(); it != AlgorithmFactory::regSpecs.end(); it++){
-        namesAlgo.push_back(it -> first);
+        infoAlgo(counter, 0) = it -> first;
+        infoAlgo(counter, 1) = AlgorithmFactory::regDescs[it -> first];
+        counter++;
     }
-
-    Rcpp::CharacterVector namesDistR = Rcpp::wrap(namesDist);
-
-    return Rcpp::List::create(
-        Rcpp::Named("Distributions", namesDistR)
-    );
+    Rcpp::CharacterVector names = {"algorithm", "description"};
+    Rcpp::colnames(infoAlgo) = names;
+    return infoAlgo;
 }
 

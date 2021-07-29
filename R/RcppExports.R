@@ -5,7 +5,11 @@ binseg <- function(data, algorithm, distribution, numCpts, minSegLen = 1L) {
     .Call(`_BinSeg_binseg`, data, algorithm, distribution, numCpts, minSegLen)
 }
 
-binseg_info <- function() {
-    .Call(`_BinSeg_binseg_info`)
+distributions_info <- function() {
+    .Call(`_BinSeg_distributions_info`)
+}
+
+algorithms_info <- function() {
+    .Call(`_BinSeg_algorithms_info`)
 }
 

@@ -6,5 +6,10 @@
 BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   summary <- binseg(data, algorithm, distribution, numCpts, minSegLen)
   BinSegObj <- new("BinSeg", data=data, summary=summary, algorithm=algorithm, distribution=distribution)
-  BinSegObj
+  return(BinSegObj)
+}
+
+BinSegInfo <- function(){
+  info <- list("algorithms"=algorithms_info(), "distributions"=distributions_info())
+  return(info)
 }

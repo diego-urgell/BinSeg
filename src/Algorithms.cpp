@@ -17,6 +17,7 @@
     class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {          \
     public:                                                                                                 \
         inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
+        static std::vector<std::string> param_names;                                                        \
         SUBCLASS(){(void) is_registered;}                                                                   \
         BODY                                                                                                \
     };
@@ -31,7 +32,8 @@ ALGORITHM(BS,
      * set will always be the optimal partition. To find more segments, just find the best split, store the info, and add
      * to the candidates multiset the two newly created segments.
      */
-     static std::vector<std::string> param_names;
+
+    inline static std::string description = "Regular Binary Segmentation";
 
      void binseg(){
          this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, -1, -1);

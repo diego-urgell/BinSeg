@@ -18,6 +18,7 @@ public:
 
     using objectCreateMethod = std::shared_ptr<T>(*)(); // Pointer to a function that returns a shared pointer of class T
     inline static std::map<std::string, objectCreateMethod> regSpecs = std::map<std::string, objectCreateMethod>();
+    inline static std::map<std::string, std::string> regDescs = std::map<std::string, std::string>();
 
 public:
 
@@ -30,9 +31,10 @@ public:
      * @param funcCreate function to create an object of the subclass
      * @return A boolean indicating if registration was successful
      */
-    static bool Register(const std::string name, objectCreateMethod funcCreate) {
+    static bool Register(const std::string name, std::string description, objectCreateMethod funcCreate) {
         if (auto it = regSpecs.find(name); it == regSpecs.end()) {
             regSpecs[name] = funcCreate;
+            regDescs[name] = description;
             return true;
         }
         return false;
@@ -74,5 +76,5 @@ public:
     }
 
 protected:
-    inline static bool is_registered = F::Register(S::factoryName, S::createMethod);
+    inline static bool is_registered = F::Register(S::factoryName, S::description, S::createMethod);
 };

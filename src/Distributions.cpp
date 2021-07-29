@@ -16,6 +16,8 @@
 
 DISTRIBUTION(mean_norm,
 
+    inline static std::string description = "Normal distribution with change in Mean and constant Variance";
+
     void setCumsum(){
         this -> summaryStatistics = std::make_shared<Cumsum>();
     }
@@ -43,6 +45,8 @@ DISTRIBUTION(mean_norm,
 
 
 DISTRIBUTION(var_norm,
+
+    inline static std::string description = "Normal Distribution with change in Variance and constant Mean";
 
     double costFunction(int start, int end){
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
@@ -72,6 +76,8 @@ DISTRIBUTION(var_norm,
 )
 
 DISTRIBUTION(meanvar_norm,
+
+    inline static std::string description = "Normal distribution with change in both mean and variance";
 
     double costFunction(int start, int end){
         double lSum =  this -> summaryStatistics -> getLinearSum(start, end);
@@ -104,6 +110,8 @@ DISTRIBUTION(meanvar_norm,
 )
 
 DISTRIBUTION(negbin,
+
+    inline static std::string description = "Negative Binomial distribution with change in Probability of Success";
 
     double costFunction(int start, int end){
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
@@ -141,6 +149,8 @@ DISTRIBUTION(negbin,
 
 DISTRIBUTION(poisson,
 
+    inline static std::string description = "Poisson distribution with change in Rate";
+
     double costFunction(int start, int end){
         double rate = this -> summaryStatistics -> getMean(start, end);
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
@@ -167,6 +177,9 @@ DISTRIBUTION(poisson,
 
 
 DISTRIBUTION(exponential,
+
+    inline static std::string description = "Exponential distribution with change in Rate";
+
     double costFunction(int start, int end){
         int T = end - start + 1;
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
