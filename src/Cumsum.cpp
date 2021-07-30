@@ -46,7 +46,8 @@ public:
      * @return The Linear cumulative sum from start to end.
      */
     double getLinearSum(int start, int end) {
-        if (start > end || start < 0) throw "Index Error";
+        if (start < 0) throw "Index Error";
+        if (start > end) return INFINITY;
         if (start == 0) return linearCumsum[end];
         return linearCumsum[end] - linearCumsum[start - 1];
     }
@@ -121,7 +122,8 @@ public:
      * @return The quadratic cumulative sum from start to end
      */
     double getQuadraticSum(int start, int end){
-        if (start > end || start < 0) throw "Index Error";
+        if (start < 0) throw "Index Error";
+        if (start > end) return INFINITY;
         if (start == 0) return quadraticCumsum[end];
         return quadraticCumsum[end] - quadraticCumsum[start - 1];
     }

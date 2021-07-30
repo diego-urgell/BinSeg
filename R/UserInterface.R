@@ -21,7 +21,7 @@ BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
     stop("The selected algorithm is not currently implemented. Use BinSegInfo() to check the available algorithms")
   }
 
-  if(! distribution %in% distributions_info()[,"distributions"]){
+  if(! distribution %in% distributions_info()[,"distribution"]){
     stop("The selected distribution is not currently implemented. Use BinSegInfo() to check the available distributions")
   }
 
@@ -57,12 +57,20 @@ BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
     }
   }
 
-  if (var(data) == 0){
-    stop("Not possible to compute a changepoint model if all the data points are the same.")
+  summary <- as.data.table(binseg(data, algorithm, distribution, numCpts, minSegLen))
+
+  summary[apply(summary, 1, function(x) !all(x==0)),]
+
+  na_index <- function(x)ifelse(x<0, NA, x)
+  summary["invalidates_index"] <- lapply(summary["invalidates_index"], na_index)
+  summary["invalidates_after"] <- lapply(summary["invalidates_after"], na_index)
+
+  na_inf <- function(x) is.nan(x) | is.infinite(x)
+  for (j in seq_len(ncol(summary))){
+     set(summary,which(na_inf(summary[[j]])),j,NA)
   }
 
-  summary <- binseg(data, algorithm, distribution, numCpts, minSegLen)
-  BinSegObj <- new("BinSeg", data=data, summary=summary, algorithm=algorithm, distribution=distribution)
+  BinSegObj <- new("BinSeg", data=data, models_summary=summary, algorithm=algorithm, distribution=distribution, min_seg_len=minSegLen)
 
   if (nrow(BinSegObj@models_summary) < numCpts){
     warning("The amount of changepoints found is smaller than the expected number. It was not possible to further

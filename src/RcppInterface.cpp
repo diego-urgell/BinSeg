@@ -13,7 +13,7 @@ std::vector<std::string> negbin::param_names = {"before_prob", "after_prob"};
 std::vector<std::string> poisson::param_names = {"before_rate", "after_rate"};
 std::vector<std::string> exponential::param_names = {"before_rate", "after_rate"};
 
-std::vector<std::string> BS::param_names = {"cpts", "invalidates_index", "invalidates_after", "cost"};
+std::vector<std::string> BS::param_names = {"cpts_index", "cpts", "invalidates_index", "invalidates_after", "cost"};
 
 
 // [[Rcpp::export]]
@@ -22,7 +22,7 @@ Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcp
     std::shared_ptr<Distribution> dist = DistributionFactory::Create(distribution);
     std::shared_ptr<Algorithm> algo = AlgorithmFactory::Create(algorithm);
 
-    Rcpp::NumericMatrix params_mat = Rcpp::NumericMatrix(numCpts + 1, dist -> getParamCount() + 4);
+    Rcpp::NumericMatrix params_mat = Rcpp::NumericMatrix(numCpts + 1, dist -> getParamCount() + 5);
 
     dist -> setCumsum();
     algo -> init(&data[0], data.size(), numCpts, dist, minSegLen, &params_mat[0]);

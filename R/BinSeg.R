@@ -8,14 +8,14 @@ library(methods)
 setClass("BinSeg",
          slots=c(
            data="numeric",
-           models_summary="matrix",
+           models_summary="data.table",
            algorithm="character",
            distribution="character",
            min_seg_len="numeric"
          ),
          prototype=list(
            data=NA_real_,
-           models_summary=matrix(),
+           models_summary=data.table(),
            algorithm=NA_character_,
            distribution=NA_character_,
            min_seg_len=NA_integer_
@@ -30,24 +30,27 @@ setGeneric("algo", function(object) standardGeneric("algo"), signature="object")
 setGeneric("dist", function(object) standardGeneric("dist"), signature="object")
 setGeneric("cpts", function(object, ncpts) standardGeneric("cpts"), signature=c("object", "ncpts"))
 setGeneric("coef", function(object, ncpts) standardGeneric("coef"), signature=c("object", "ncpts"))
+setGeneric("plot", function(object, ncpts) standardGeneric("plot"), signature=c("object", "ncpts"))
+setGeneric("plotCost", function(object, ncpts) standardGeneric("plotCost"), signature=c("object", "ncpts"))
 setGeneric("show", function(object) standardGeneric("show"), signature="object")
 setGeneric("logLik", function(object, ncpts) standardGeneric("logLik"), signature=c("object", "ncpts"))
+# resid checks for residuals
 
 setMethod("algo", "BinSeg", function(object) object@algorithm)
 
 setMethod("dist", "BinSeg", function(object) object@distribution)
 
-setMethod("cpts", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
+setMethod("cpts", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@models_summary)){
   validateSegments(ncpts)
   cpts <- object@models_summary[, "cpts"][ncpts]
   return(cpts)
 })
 
-setMethod("coef", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
+setMethod("coef", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@models_summary)){
   object@models_summary
 })
 
-setMethod("logLik", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@summary)){
+setMethod("logLik", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@models_summary)){
   validateSegments(ncpts)
   cpts <- object@models_summary[, "cost"][ncpts]
   return(cpts)

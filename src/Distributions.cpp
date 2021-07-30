@@ -29,8 +29,8 @@ DISTRIBUTION(mean_norm,
     }
 
     void calcParams(int start, int mid, int end, int i,  double * param_mat, int cpts){
-        param_mat[i + cpts * 4] = this -> summaryStatistics -> getMean(start, mid);
-        param_mat[i + cpts * 5] = this -> summaryStatistics -> getMean(mid + 1, end);
+        param_mat[i + cpts * 5] = this -> summaryStatistics -> getMean(start, mid);
+        param_mat[i + cpts * 6] = this->summaryStatistics->getMean(mid + 1, end);
     }
 
     std::vector<std::string> getParamNames(){
@@ -61,8 +61,8 @@ DISTRIBUTION(var_norm,
     void calcParams(int start, int mid, int end, int i,  double * param_mat, int cpts){
         double varLeft = this -> summaryStatistics -> getVarianceN(start, mid, true);
         double varRight = this -> summaryStatistics -> getVarianceN(mid + 1, end, true);
-        param_mat[i + cpts * 4] = sqrt(varLeft / (mid - start + 1));
-        param_mat[i + cpts * 5] = sqrt(varRight / (end - mid + 1));
+        param_mat[i + cpts * 5] = sqrt(varLeft / (mid - start + 1));
+        param_mat[i + cpts * 6] = sqrt(varRight / (end - mid + 1));
     }
 
     std::vector<std::string> getParamNames(){
@@ -94,10 +94,10 @@ DISTRIBUTION(meanvar_norm,
         double varLeft = this -> summaryStatistics -> getVarianceN(start, mid, false);
         double varRight = this -> summaryStatistics -> getVarianceN(mid + 1, end, false);
 
-        param_mat[i + cpts * 4] = meanLeft;
-        param_mat[i + cpts * 5] = meanRight;
-        param_mat[i + cpts * 6] = sqrt(varLeft / (mid - start + 1));
-        param_mat[i + cpts * 7] = sqrt(varRight / (end - mid + 1));
+        param_mat[i + cpts * 5] = meanLeft;
+        param_mat[i + cpts * 6] = meanRight;
+        param_mat[i + cpts * 7] = varLeft / (mid - start + 1);
+        param_mat[i + cpts * 8] = varRight / (end - mid + 1);
     }
 
     std::vector<std::string> getParamNames(){
@@ -133,8 +133,8 @@ DISTRIBUTION(negbin,
         double probLeft = meanLeft/varLeft;
         double probRight = meanRight/varRight;
 
-        param_mat[i + cpts * 4] = probLeft;
-        param_mat[i + cpts * 5] = probRight;
+        param_mat[i + cpts * 5] = probLeft;
+        param_mat[i + cpts * 6] = probRight;
     }
 
     std::vector<std::string> getParamNames(){
@@ -162,8 +162,8 @@ DISTRIBUTION(poisson,
         double rateLeft = this -> summaryStatistics -> getMean(start, mid);
         double rateRight = this -> summaryStatistics -> getMean(mid + 1, end);
 
-        param_mat[i + cpts * 4] = rateLeft;
-        param_mat[i + cpts * 5] = rateRight;
+        param_mat[i + cpts * 5] = rateLeft;
+        param_mat[i + cpts * 6] = rateRight;
     }
 
     std::vector<std::string> getParamNames(){
@@ -193,8 +193,8 @@ DISTRIBUTION(exponential,
         double rateLeft = (mid - start + 1) / lSumLeft;
         double rateRight = (end - mid + 1) / lSumRight;
 
-        param_mat[i + cpts * 4] = rateLeft;
-        param_mat[i + cpts * 5] = rateRight;
+        param_mat[i + cpts * 5] = rateLeft;
+        param_mat[i + cpts * 6] = rateRight;
     }
 
     std::vector<std::string> getParamNames(){

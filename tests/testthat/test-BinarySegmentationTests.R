@@ -7,7 +7,7 @@ if(requireNamespace("changepoint", "gfpop"))
 library(testthat)
 library(BinSeg)
 
-set.seed(100)
+set.seed(200)
 
 test_that(desc="Binary Segmentation + Change in mean: Test 1 - Single changepoint",{
   data  <-  c(rnorm(10, 100, 10), rnorm(10, 50, 10))
