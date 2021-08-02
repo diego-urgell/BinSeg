@@ -36,7 +36,7 @@ ALGORITHM(BS,
     inline static std::string description = "Regular Binary Segmentation";
 
      void binseg(){
-         this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, 1, 0);
+         this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, 0, 0);
          int sep = this -> numCpts + 1;
          this -> param_mat[0] = 1;
          this -> param_mat[sep] = this -> length;
@@ -49,7 +49,7 @@ ALGORITHM(BS,
              if (optCpt -> mid == 0) return;
              this -> param_mat[i] = i + 1;
              this -> param_mat[sep + i] = optCpt -> mid + 1;
-             this -> param_mat[sep * 2 + i] = optCpt -> invalidatesIndex;
+             this -> param_mat[sep * 2 + i] = optCpt -> invalidatesIndex + 1;
              this -> param_mat[sep * 3 + i] = optCpt -> invalidatesAfter;
              this -> param_mat[sep * 4 + i] = param_mat[sep * 4 + i - 1] - optCpt -> bestDecrease;
              this -> dist -> calcParams(optCpt -> start, optCpt -> mid, optCpt -> end, i, this -> param_mat, sep);

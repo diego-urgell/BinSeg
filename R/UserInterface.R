@@ -59,18 +59,24 @@ BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
 
   summary <- as.data.table(binseg(data, algorithm, distribution, numCpts, minSegLen))
 
-  summary[apply(summary, 1, function(x) !all(x==0)),]
+  summary[apply(summary, 1, function(x) !all(x==0)),] # Eliminate all zero rows
 
-  na_index <- function(x)ifelse(x<0, NA, x)
-  summary["invalidates_index"] <- lapply(summary["invalidates_index"], na_index)
-  summary["invalidates_after"] <- lapply(summary["invalidates_after"], na_index)
+  summary[invalidates_index < 0, invalidates_index := NA,] # Set first invalidate info to NA
+  summary[invalidates_after < 0, invalidates_after := NA,]
 
-  na_inf <- function(x) is.nan(x) | is.infinite(x)
+  na_inf <- function(x) is.nan(x) | is.infinite(x) # Set inf parameters to NA
   for (j in seq_len(ncol(summary))){
      set(summary,which(na_inf(summary[[j]])),j,NA)
   }
 
-  BinSegObj <- new("BinSeg", data=data, models_summary=summary, algorithm=algorithm, distribution=distribution, min_seg_len=minSegLen)
+  if (distribution == "mean_norm") param_names <- "mean"
+  else if(distribution == "var_norm") param_names <- "variance"
+  else if (distribution == "meanvar_norm") param_names <- c("mean", "variance")
+  else if (distribuion == "negbin") param_names <- "success_probability"
+  else if (distribution == "poisson" || distribution == "exponential") param_names <- "rate"
+
+  BinSegObj <- new("BinSeg", data=data, models_summary=summary, algorithm=algorithm,
+                   distribution=distribution, min_seg_len=minSegLen, param_names=param_names)
 
   if (nrow(BinSegObj@models_summary) < numCpts){
     warning("The amount of changepoints found is smaller than the expected number. It was not possible to further

@@ -7,7 +7,7 @@ if(requireNamespace("changepoint", "gfpop"))
 library(testthat)
 library(BinSeg)
 
-set.seed(200)
+set.seed(2000)
 
 test_that(desc="Binary Segmentation + Change in mean: Test 1 - Single changepoint",{
   data  <-  c(rnorm(10, 100, 10), rnorm(10, 50, 10))
@@ -27,7 +27,15 @@ test_that(desc="Binary Segmentation + Change in mean: Test 3 - No change with la
   data  <-  rnorm(10000, 100, 10)
   ans <- BinSeg::binseg(data, "BS", "mean_norm", 500, 1)
   check_ans <- changepoint::cpt.mean(data=data, penalty="None", method="BinSeg", Q=500, test.stat="Normal")@cpts
-  expect_equal(sort(ans[, "cpts"]), check_ans)
+  expect_equal(sort(ans[, "cpts"]), sort(check_ans))
+})
+
+test_that(desc="Binary Segmentation + Change in mean: Test 4 - 5 change points with medium vector",{
+  data  <-  c(rnorm(100, 100, 10), rnorm(100, 50, 10), rnorm(100, 25, 10),
+              rnorm(100, 0, 10), rnorm(100, -50, 10), rnorm(100, -100, 10))
+  ans <- BinSeg::binseg(data, "BS", "mean_norm", 5, 2)
+  check_ans <-binsegRcpp::binseg_normal(data.vec = data, max.segments = 6)[["end"]]
+  expect_equal(sort(ans[, "cpts"]), sort(check_ans))
 })
 
 test_that(desc="Binary Segmentation + Change in mean and variace: Test 1 - Single changepoint in mean", {

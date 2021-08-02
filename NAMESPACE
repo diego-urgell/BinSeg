@@ -1,3 +1,6 @@
 useDynLib(BinSeg, .registration=TRUE)
+
+import(data.table)
 importFrom(Rcpp, evalCpp)
-exportPattern("^[[:alpha:]]+")
+
+export("BinSeg", "BinSegInfo")
