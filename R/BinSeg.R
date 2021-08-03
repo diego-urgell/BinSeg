@@ -33,7 +33,7 @@ setGeneric("dist", function(object) standardGeneric("dist"), signature="object")
 setGeneric("cpts", function(object, ...) standardGeneric("cpts"), signature="object")
 setGeneric("coef", function(object,  ...) standardGeneric("coef"), signature="object")
 setGeneric("plot", function(object, ...) standardGeneric("plot"), signature="object")
-setGeneric("plotCost", function(object, ...) standardGeneric("plotCost"), signature="object")
+setGeneric("plotDiagnostic", function(object, ...) standardGeneric("plotDiagnostic"), signature="object")
 setGeneric("show", function(object) standardGeneric("show"), signature="object")
 setGeneric("logLik", function(object, ...) standardGeneric("logLik"), signature="object")
 setGeneric("resid", function(object, ...) standardGeneric("resid"), signature="object")
@@ -98,20 +98,28 @@ setMethod("plot", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_su
   validateSegments(object, ncpts)
   coefs <- coef(object, ncpts)
   plot <- ggplot() +
-  geom_line(data=data.frame(index = y_axis, val = object@data), # First graph the line
-            mapping=aes(x=index , y=val), color="#636363") +
-  geom_vline(data=coefs[start > 1],
-             mapping=aes(xintercept=start + y_axis[1] - 1),
-             color="#56B4E9", size=0.9) +
-  facet_grid(segments ~ .) +
-  theme_bw() +
-  ggtitle(title, subtitle=paste("Algorithm:", object@algorithm, ",  Distribution:", object@distribution )) +
-  theme(plot.title=element_text(face="bold",margin=margin(t=10,b=5),size=13),
-        plot.subtitle=element_text(margin=margin(t=0,b=5)))
+    geom_line(data=data.frame(index = y_axis, val = object@data), # First graph the line
+              mapping=aes(x=index , y=val), color="#636363") +
+    geom_vline(data=coefs[start > 1],
+               mapping=aes(xintercept=start + y_axis[1] - 1),
+               color="#56B4E9", size=0.9) +
+    facet_grid(segments ~ .) +
+    theme_bw() +
+    ggtitle(title, subtitle=paste("Algorithm:", object@algorithm, ",  Distribution:", object@distribution )) +
+    theme(plot.title=element_text(face="bold",margin=margin(t=10,b=5),size=13),
+          plot.subtitle=element_text(margin=margin(t=0,b=5)))
   return(plot)
 })
 
-setMethod("plotCost")
+setMethod("plotDiagnostic", "BinSeg", function(object, ncpts= seq_len(nrow(object@models_summary))){
+  validateSegments(object, ncpts)
+  plot <- ggplot() +
+    geom_line(data=data.frame(cpts=object@models_summary[,cpts_index], cost=object@models_summary[,cost]),
+              mapping=aes(x=cpts , y=cost), color="#636363") +
+    ggtitle("Diagnostic plot: Overall cost per changepoint model",
+            subtitle=paste("Algorithm:", object@algorithm, ",  Distribution:", object@distribution ))
+  return(plot)
+})
 
 validateSegments <- function(object, segments){
   max_index <- nrow(object@models_summary)
