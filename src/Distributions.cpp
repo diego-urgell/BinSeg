@@ -190,8 +190,8 @@ DISTRIBUTION(exponential,
     void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
         double lSumLeft = this -> summaryStatistics -> getLinearSum(start, mid);
         double lSumRight = this -> summaryStatistics -> getLinearSum(mid + 1, end);
-        double rateLeft = (mid - start + 1) / lSumLeft;
-        double rateRight = (end - mid + 1) / lSumRight;
+        double rateLeft = lSumLeft == INFINITY? INFINITY : (mid - start + 1) / lSumLeft;
+        double rateRight = lSumRight == INFINITY? INFINITY : (end - mid + 1) / lSumRight;
 
         param_mat[i + cpts * 5] = rateLeft;
         param_mat[i + cpts * 6] = rateRight;

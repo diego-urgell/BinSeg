@@ -72,7 +72,7 @@ BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   if (distribution == "mean_norm") param_names <- "mean"
   else if(distribution == "var_norm") param_names <- "variance"
   else if (distribution == "meanvar_norm") param_names <- c("mean", "variance")
-  else if (distribuion == "negbin") param_names <- "success_probability"
+  else if (distribution == "negbin") param_names <- "success_probability"
   else if (distribution == "poisson" || distribution == "exponential") param_names <- "rate"
 
   BinSegObj <- new("BinSeg", data=data, models_summary=summary, algorithm=algorithm,

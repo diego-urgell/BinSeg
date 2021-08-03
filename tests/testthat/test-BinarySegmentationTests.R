@@ -95,7 +95,7 @@ test_that(desc="Binary Segmentation + Change in variace: Test 3 - Two changepoin
 })
 
 
-test_that(desc="Binary Segmentation + Change in mean and variace: Test 4 - Big vector with no changepoint", {
+test_that(desc="Binary Segmentation + Change in variace: Test 4 - Big vector with no changepoint", {
   data  <-  rnorm(100000, 500, 100)
   ans <- BinSeg::binseg(data, "BS", "var_norm", 500, 2)
   check_ans <- changepoint::cpt.var(data=data, penalty="None", method="BinSeg", Q=500, test.stat="Normal")@cpts

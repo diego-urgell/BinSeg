@@ -30,25 +30,25 @@ setValidity("BinSeg", function(object){
 
 setGeneric("algo", function(object) standardGeneric("algo"), signature="object")
 setGeneric("dist", function(object) standardGeneric("dist"), signature="object")
-setGeneric("cpts", function(object, ncpts) standardGeneric("cpts"), signature=c("object", "ncpts"))
+setGeneric("cpts", function(object, ...) standardGeneric("cpts"), signature="object")
 setGeneric("coef", function(object,  ...) standardGeneric("coef"), signature="object")
-setGeneric("plot", function(object, ncpts) standardGeneric("plot"), signature=c("object", "ncpts"))
-setGeneric("plotCost", function(object, ncpts) standardGeneric("plotCost"), signature=c("object", "ncpts"))
+setGeneric("plot", function(object, ...) standardGeneric("plot"), signature="object")
+setGeneric("plotCost", function(object, ...) standardGeneric("plotCost"), signature="object")
 setGeneric("show", function(object) standardGeneric("show"), signature="object")
-setGeneric("logLik", function(object, ncpts) standardGeneric("logLik"), signature=c("object", "ncpts"))
-# resid checks for residuals
+setGeneric("logLik", function(object, ...) standardGeneric("logLik"), signature="object")
+setGeneric("resid", function(object, ...) standardGeneric("resid"), signature="object")
 
 setMethod("algo", "BinSeg", function(object) object@algorithm)
 
 setMethod("dist", "BinSeg", function(object) object@distribution)
 
-setMethod("cpts", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@models_summary)){
-  validateSegments(ncpts)
+setMethod("cpts", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_summary))){
+  validateSegments(object, ncpts)
   cpts <- object@models_summary[, "cpts"][ncpts]
   return(cpts)
 })
 
-setMethod("coef", "BinSeg", function(object, segments=1:nrow(object@models_summary)){
+setMethod("coef", "BinSeg", function(object, segments=seq_len(nrow(object@models_summary))){
   validateSegments(object, segments)
   model <- data.table(segments)[, {
      i <- 1:segments
@@ -64,10 +64,8 @@ setMethod("coef", "BinSeg", function(object, segments=1:nrow(object@models_summa
      }
      ans
   }, by=segments]
-
   return(model)
 })
-
 
 build_param <- function(before_param, after_param, summary_dt, col_name){
   param_full <- unlist(summary_dt[, c(before_param, after_param), with=FALSE, drop=TRUE], use.names=FALSE)
@@ -81,9 +79,8 @@ build_param <- function(before_param, after_param, summary_dt, col_name){
   return(param)
 }
 
-
-setMethod("logLik", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object@models_summary)){
-  validateSegments(ncpts)
+setMethod("logLik", "BinSeg", function(object, ncpts= seq_len(nrow(object@models_summary))){
+  validateSegments(object, ncpts)
   cpts <- object@models_summary[, "cost"][ncpts]
   return(cpts)
 })
@@ -91,6 +88,30 @@ setMethod("logLik", c("BinSeg", "numeric"), function(object, ncpts=1:nrow(object
 setMethod("show", "BinSeg", function(object){
   object@models_summary
 })
+
+setMethod("plot", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_summary)),
+                                     y_axis=seq_along(object@data),
+                                     title=paste("BinSeg changepoint analysis")){
+  if(length(y_axis) != length(seq_along(object@data))){
+    stop("The provided y_index vector must have the length as the data vector")
+  }
+  validateSegments(object, ncpts)
+  coefs <- coef(object, ncpts)
+  plot <- ggplot() +
+  geom_line(data=data.frame(index = y_axis, val = object@data), # First graph the line
+            mapping=aes(x=index , y=val), color="#636363") +
+  geom_vline(data=coefs[start > 1],
+             mapping=aes(xintercept=start + y_axis[1] - 1),
+             color="#56B4E9", size=0.9) +
+  facet_grid(segments ~ .) +
+  theme_bw() +
+  ggtitle(title, subtitle=paste("Algorithm:", object@algorithm, ",  Distribution:", object@distribution )) +
+  theme(plot.title=element_text(face="bold",margin=margin(t=10,b=5),size=13),
+        plot.subtitle=element_text(margin=margin(t=0,b=5)))
+  return(plot)
+})
+
+setMethod("plotCost")
 
 validateSegments <- function(object, segments){
   max_index <- nrow(object@models_summary)
