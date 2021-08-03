@@ -133,3 +133,22 @@ validateSegments <- function(object, segments){
       max_index)
   }
 }
+
+setMethod("resid", "BinSeg", function(object){
+  coefs <- coef(object, nrow(object@models_summary))
+  means <- coefs[, mean(object@data[start:end]), by=start]$V1
+  vars <- coefs[, var(object@data[start:end]), by=start]$V1
+  coefs <- cbind(coefs, means, vars)
+  ans <- numeric()
+  for(i in seq_len(nrow(coefs))){
+    seg <- (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["means"]][i])  / coefs[["vars"]][i]
+    ans <- c(ans,seg)
+  }
+  return(ans)
+})
+
+sd <- sd(object@data[start:end])
+coefs[,data.table(
+  mean=mean,
+  sd=sd
+)]
