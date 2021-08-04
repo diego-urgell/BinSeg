@@ -5,6 +5,7 @@
 
 library(methods)
 
+
 setClass("BinSeg",
          slots=c(
            data="numeric",
@@ -24,9 +25,6 @@ setClass("BinSeg",
          )
 )
 
-setValidity("BinSeg", function(object){
-
-})
 
 setGeneric("algo", function(object) standardGeneric("algo"), signature="object")
 setGeneric("dist", function(object) standardGeneric("dist"), signature="object")
@@ -38,7 +36,9 @@ setGeneric("show", function(object) standardGeneric("show"), signature="object")
 setGeneric("logLik", function(object, ...) standardGeneric("logLik"), signature="object")
 setGeneric("resid", function(object, ...) standardGeneric("resid"), signature="object")
 
+#' @describeIn BinSeg Obtain the algorithm used in the analysis.
 setMethod("algo", "BinSeg", function(object) object@algorithm)
+
 
 setMethod("dist", "BinSeg", function(object) object@distribution)
 
@@ -146,9 +146,3 @@ setMethod("resid", "BinSeg", function(object){
   }
   return(ans)
 })
-
-sd <- sd(object@data[start:end])
-coefs[,data.table(
-  mean=mean,
-  sd=sd
-)]

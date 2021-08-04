@@ -5,8 +5,7 @@ Version: 1.0
 Date: 2021-06-10
 Author: Diego Enrique Jimenez Urgell
 Maintainer: Diego Enrique Jimenez Urgell <diegourgell0@gmail.com>
-Description: One paragraph description of what the package does as one
-        or more full sentences.
+Description: Efficient Binary Segmentation with multiple distributions
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.6)
 LinkingTo: Rcpp
@@ -14,3 +13,4 @@ Suggests:
     covr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+RoxygenNote: 7.1.1

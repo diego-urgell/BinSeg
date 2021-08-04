@@ -3,7 +3,44 @@
 # Created by: diego.urgell
 # Created on: 27/07/21
 
-BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
+#' Compute Changepoint Model
+#'
+#' This is the main function of the BinSeg package. It performs changepoint analysis on the provided data using the
+#' selected algorithm and distribution. Computes the optimal changepoints and estimates the parameters in each segment.
+#' Note that it is possible to view segmentation models from 1 up to the selected number of changepoints, by using
+#' the methods provided by the BinSeg Class.
+#'
+#' @param data A numeric vector containing the input data.
+#' @param algorithm A string with the algorithm to be used. Currently only "BS" (Binary Segmentation) is implemented.
+#' @param distribution A string with the distribution to be used. Use BinSegInfo to check the available
+#' distributions and their description.
+#' @param numCpts Integer determining the number of changepoints to be computed. Must be at least one. For the norm_mean
+#' distribution, as the variance is assumed to be constant, there can be up to N number of changepoints. However, for every
+#' other distribution, there are at most N/2.
+#' @param minSegLen Integer determining the minimum segment length. For the norm_mean distribution, the minimum segment
+#' length is 1. However, for all the other ones it is 2, since each segment must have two data points to calculate variance.
+#'
+#' @return A BinSeg object containing the models_summary data table, as well as extra information such as the distribution,
+#' algorithm, number of changepoints, and parameters.
+#'
+#' @examples
+#' # Create a vector with four different segments that differ in mean
+#' data  <-  c(rnorm(10, 0, 10), rnorm(10, 100, 10), rnorm(10, 200, 10), rnorm(10, 300, 10))
+#' # Compute a changepoint model using the Binary Segmentation algorithm and a normal distribution with
+#' # change in mean. Calculating models up to three changepoints.
+#' ans <- BinSeg::BinSeg(data=data, algorithm="BS", distribution="mean_norm", numCpts=3, minSegLen=1)
+#'
+#' @section Details:
+#' This is the only function that must be called to perform a new changepoint analysis with the BinSeg package. Internally,
+#' it first makes several validations to the input parameters. After this, it calls the binseg function, which connects
+#' with C++ code using Rcpp. Later on it makes some modifications to the returned matrix (which will be used as models_summary
+#' data table) and creates a new BinSeg object which is returned. Note that in order to use any of the methods from the
+#' BinSeg class you must use this function instead of directly calling the binseg function.
+#'
+#' @seealso BinSegInfo to know the available algorithms and distributions, binseg to check out
+#' the Rcpp function. BinSeg to check the return class sructure and available methods.
+#'
+BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
 
   if(!is.numeric(data)){
     stop("Only numeric data allowed")
@@ -57,6 +94,11 @@ BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
     }
   }
 
+  if (minSegLen * numCpts < length(data)){
+    stop("Given the minimum segment length and the length of he data, it is no possible to obtain the desired number
+    of segments")
+  }
+
   summary <- as.data.table(binseg(data, algorithm, distribution, numCpts, minSegLen))
 
   summary[apply(summary, 1, function(x) !all(x==0)),] # Eliminate all zero rows
@@ -86,6 +128,20 @@ BinSeg <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   return(BinSegObj)
 }
 
+#' Check available algorithms and distributions
+#'
+#' This function allows to check which algorithms and distributions are implemented in the package. It provides the string
+#' that must be passed as a parameter to the BinSeg method, along with a small description.
+#'
+#' @return A List with two slots, one for Algorithms and one for Distributions. Each one of them is a Character Matrix
+#' with a column for the parameter string and another one for the description.
+#'
+#' @section Details:
+#' This method queries directly the C++ code in order to find which distributions are currently available, as well as the
+#' name that must be passed to use them. The benefit is that no R code must be modified when a new Distribution or
+#' Algorithm is added. Only by adding on C++ it is possible to register it on the return matrix of this method.
+#'
+#' @seealso BinSegModel to perform changepoint analysis.
 BinSegInfo <- function(){
   info <- list("algorithms"=algorithms_info(), "distributions"=distributions_info())
   return(info)
