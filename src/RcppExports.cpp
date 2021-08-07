@@ -5,9 +5,9 @@
 
 using namespace Rcpp;
 
-// binseg
-Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen);
-RcppExport SEXP _BinSeg_binseg(SEXP dataSEXP, SEXP algorithmSEXP, SEXP distributionSEXP, SEXP numCptsSEXP, SEXP minSegLenSEXP) {
+// rcpp_binseg
+Rcpp::NumericMatrix rcpp_binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen);
+RcppExport SEXP _BinSeg_rcpp_binseg(SEXP dataSEXP, SEXP algorithmSEXP, SEXP distributionSEXP, SEXP numCptsSEXP, SEXP minSegLenSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,7 +16,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::String >::type distribution(distributionSEXP);
     Rcpp::traits::input_parameter< int >::type numCpts(numCptsSEXP);
     Rcpp::traits::input_parameter< int >::type minSegLen(minSegLenSEXP);
-    rcpp_result_gen = Rcpp::wrap(binseg(data, algorithm, distribution, numCpts, minSegLen));
+    rcpp_result_gen = Rcpp::wrap(rcpp_binseg(data, algorithm, distribution, numCpts, minSegLen));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -42,7 +42,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_BinSeg_binseg", (DL_FUNC) &_BinSeg_binseg, 5},
+    {"_BinSeg_rcpp_binseg", (DL_FUNC) &_BinSeg_rcpp_binseg, 5},
     {"_BinSeg_distributions_info", (DL_FUNC) &_BinSeg_distributions_info, 0},
     {"_BinSeg_algorithms_info", (DL_FUNC) &_BinSeg_algorithms_info, 0},
     {NULL, NULL, 0}

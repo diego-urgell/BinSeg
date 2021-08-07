@@ -2,7 +2,10 @@
 % Please edit documentation in R/UserInterface.R
 \name{BinSegInfo}
 \alias{BinSegInfo}
-\title{Check available algorithms and distributions}
+\title{Check available algorithms and distributions
+
+This function allows to check which algorithms and distributions are implemented in the package. It provides the string
+that must be passed as a parameter to the BinSeg method, along with a small description.}
 \usage{
 BinSegInfo()
 }
@@ -11,6 +14,8 @@ A List with two slots, one for Algorithms and one for Distributions. Each one of
 with a column for the parameter string and another one for the description.
 }
 \description{
+Check available algorithms and distributions
+
 This function allows to check which algorithms and distributions are implemented in the package. It provides the string
 that must be passed as a parameter to the BinSeg method, along with a small description.
 }

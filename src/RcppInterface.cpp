@@ -1,6 +1,3 @@
-//
-// Created by Diego Urgell on 10/06/21.
-//
 
 #include <Rcpp.h>
 #include <R.h>
@@ -17,7 +14,7 @@ std::vector<std::string> BS::param_names = {"cpts_index", "cpts", "invalidates_i
 
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen = 1){
+Rcpp::NumericMatrix rcpp_binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen){
 
     std::shared_ptr<Distribution> dist = DistributionFactory::Create(distribution);
     std::shared_ptr<Algorithm> algo = AlgorithmFactory::Create(algorithm);

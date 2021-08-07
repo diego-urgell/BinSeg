@@ -3,14 +3,15 @@
 # Created by: diego.urgell
 # Created on: 27/07/21
 
-#' Compute Changepoint Model
+#' @include BinSeg.R
+#' @title Compute Changepoint Model
 #'
-#' This is the main function of the BinSeg package. It performs changepoint analysis on the provided data using the
+#' @description This is the main function of the BinSeg package. It performs changepoint analysis on the provided data using the
 #' selected algorithm and distribution. Computes the optimal changepoints and estimates the parameters in each segment.
 #' Note that it is possible to view segmentation models from 1 up to the selected number of changepoints, by using
 #' the methods provided by the BinSeg Class.
 #'
-#' @param data A numeric vector containing the input data.
+#' @param data A numeric vector containing the input data. Must have at least length 1.
 #' @param algorithm A string with the algorithm to be used. Currently only "BS" (Binary Segmentation) is implemented.
 #' @param distribution A string with the distribution to be used. Use BinSegInfo to check the available
 #' distributions and their description.
@@ -95,11 +96,11 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   }
 
   if (minSegLen * numCpts < length(data)){
-    stop("Given the minimum segment length and the length of he data, it is no possible to obtain the desired number
+    stop("Given the minimum segment length and the length of the data, it is no possible to obtain the desired number
     of segments")
   }
 
-  summary <- as.data.table(binseg(data, algorithm, distribution, numCpts, minSegLen))
+  summary <- as.data.table(rcpp_binseg(data, algorithm, distribution, numCpts, minSegLen))
 
   summary[apply(summary, 1, function(x) !all(x==0)),] # Eliminate all zero rows
 
@@ -127,10 +128,11 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
 
   return(BinSegObj)
 }
-
-#' Check available algorithms and distributions
+#' @include BinSeg.R
 #'
-#' This function allows to check which algorithms and distributions are implemented in the package. It provides the string
+#' @title Check available algorithms and distributions
+#'
+#' @description This function allows to check which algorithms and distributions are implemented in the package. It provides the string
 #' that must be passed as a parameter to the BinSeg method, along with a small description.
 #'
 #' @return A List with two slots, one for Algorithms and one for Distributions. Each one of them is a Character Matrix
@@ -146,3 +148,7 @@ BinSegInfo <- function(){
   info <- list("algorithms"=algorithms_info(), "distributions"=distributions_info())
   return(info)
 }
+
+# TODO: Would be nice to include the distribution parameters in the C++ code. However, this is not necessary since
+#  conditions must be added anyway. It would be nice to know beforehand which parameters are going to be estimated.
+

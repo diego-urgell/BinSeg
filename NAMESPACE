@@ -5,4 +5,7 @@ import(ggfortify)
 import(ggplot2)
 importFrom(Rcpp, evalCpp)
 
-export("BinSeg", "BinSegInfo")
+
+exportClasses(BinSeg)
+exportMethods(plot, plotDiagnostic, logLik, coef, cpts, algo, dist, resid)
+export("BinSegModel", "BinSegInfo")
