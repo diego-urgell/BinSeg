@@ -1,9 +1,23 @@
 language: r
 
+include:
+  - os: linux
+    compiler: clang
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - llvm-toolchain-trusty-6.0
+        packages:
+          - clang-6.0
+          - libstdc++-7-dev
+
 before_script:
   - bash travis.sh
 
 sudo: required
+
+cache: packages
 
 notifications:
   email:
