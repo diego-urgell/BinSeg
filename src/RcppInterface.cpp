@@ -1,6 +1,3 @@
-//
-// Created by Diego Urgell on 10/06/21.
-//
 
 #include <Rcpp.h>
 #include <R.h>
@@ -13,16 +10,16 @@ std::vector<std::string> negbin::param_names = {"before_prob", "after_prob"};
 std::vector<std::string> poisson::param_names = {"before_rate", "after_rate"};
 std::vector<std::string> exponential::param_names = {"before_rate", "after_rate"};
 
-std::vector<std::string> BS::param_names = {"cpts", "invalidates_index", "invalidates_after", "cost"};
+std::vector<std::string> BS::param_names = {"cpts_index", "cpts", "invalidates_index", "invalidates_after", "cost"};
 
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen = 1){
+Rcpp::NumericMatrix rcpp_binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen){
 
     std::shared_ptr<Distribution> dist = DistributionFactory::Create(distribution);
     std::shared_ptr<Algorithm> algo = AlgorithmFactory::Create(algorithm);
 
-    Rcpp::NumericMatrix params_mat = Rcpp::NumericMatrix(numCpts + 1, dist -> getParamCount() + 4);
+    Rcpp::NumericMatrix params_mat = Rcpp::NumericMatrix(numCpts + 1, dist -> getParamCount() + 5);
 
     dist -> setCumsum();
     algo -> init(&data[0], data.size(), numCpts, dist, minSegLen, &params_mat[0]);
@@ -35,22 +32,31 @@ Rcpp::NumericMatrix binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcp
 
 
 // [[Rcpp::export]]
-Rcpp::List binseg_info(){
-
-    std::vector<std::string> namesDist =  std::vector<std::string>();
+Rcpp::CharacterMatrix distributions_info(){
+    Rcpp::CharacterMatrix infoDist(DistributionFactory::regSpecs.size(), 2);
+    int counter = 0;
     for (auto it = DistributionFactory::regSpecs.begin(); it != DistributionFactory::regSpecs.end(); it++){
-        namesDist.push_back(it -> first);
+        infoDist(counter, 0) = it -> first;
+        infoDist(counter, 1) = DistributionFactory::regDescs[it -> first];
+        counter++;
     }
+    Rcpp::CharacterVector names = {"distribution", "description"};
+    Rcpp::colnames(infoDist) = names;
+    return infoDist;
+}
 
+// [[Rcpp::export]]
+Rcpp::CharacterMatrix algorithms_info(){
+    Rcpp::CharacterMatrix infoAlgo(AlgorithmFactory::regSpecs.size(), 2);
+    int counter = 0;
     std::vector<std::string> namesAlgo =  std::vector<std::string>();
     for (auto it = AlgorithmFactory::regSpecs.begin(); it != AlgorithmFactory::regSpecs.end(); it++){
-        namesAlgo.push_back(it -> first);
+        infoAlgo(counter, 0) = it -> first;
+        infoAlgo(counter, 1) = AlgorithmFactory::regDescs[it -> first];
+        counter++;
     }
-
-    Rcpp::CharacterVector namesDistR = Rcpp::wrap(namesDist);
-
-    return Rcpp::List::create(
-        Rcpp::Named("Distributions", namesDistR)
-    );
+    Rcpp::CharacterVector names = {"algorithm", "description"};
+    Rcpp::colnames(infoAlgo) = names;
+    return infoAlgo;
 }
 

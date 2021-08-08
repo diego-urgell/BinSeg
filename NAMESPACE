@@ -1,3 +1,12 @@
 useDynLib(BinSeg, .registration=TRUE)
+
+import(data.table)
+import(ggfortify)
+import(ggplot2)
+import(methods)
 importFrom(Rcpp, evalCpp)
-exportPattern("^[[:alpha:]]+")
+
+
+exportClasses(BinSeg)
+exportMethods(plot, plotDiagnostic, logLik, coef, cpts, algo, dist, resid)
+export("BinSegModel", "BinSegInfo")

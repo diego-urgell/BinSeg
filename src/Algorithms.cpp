@@ -17,6 +17,7 @@
     class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {          \
     public:                                                                                                 \
         inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
+        static std::vector<std::string> param_names;                                                        \
         SUBCLASS(){(void) is_registered;}                                                                   \
         BODY                                                                                                \
     };
@@ -31,22 +32,26 @@ ALGORITHM(BS,
      * set will always be the optimal partition. To find more segments, just find the best split, store the info, and add
      * to the candidates multiset the two newly created segments.
      */
-     static std::vector<std::string> param_names;
+
+    inline static std::string description = "Regular Binary Segmentation";
 
      void binseg(){
-         this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, -1, -1);
+         this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, 0, 0);
          int sep = this -> numCpts + 1;
-         this -> param_mat[0] = this -> length;
-         this -> param_mat[sep] = 0;
-         this -> param_mat[sep * 2] = 0;
-         this -> param_mat[sep * 3] = this -> dist -> costFunction(0, this -> length - 1);
+         this -> param_mat[0] = 1;
+         this -> param_mat[sep] = this -> length;
+         this -> param_mat[sep * 2] = -1;
+         this -> param_mat[sep * 3] = -1;
+         this -> param_mat[sep * 4] = this -> dist -> costFunction(0, this -> length - 1);
+         this -> dist -> calcParams(0, this -> length - 1, 0, 0, this -> param_mat, sep);
          for(int i = 1; i <= this -> numCpts; i++){
              std::multiset<Segment>::iterator optCpt = this -> candidates.begin();
              if (optCpt -> mid == 0) return;
-             this -> param_mat[i] = optCpt -> mid + 1;
-             this -> param_mat[sep + i] = optCpt -> invalidatesIndex;
-             this -> param_mat[sep * 2 + i] = optCpt -> invalidatesAfter;
-             this -> param_mat[sep * 3 + i] = param_mat[sep * 3 + i - 1] - optCpt -> bestDecrease;
+             this -> param_mat[i] = i + 1;
+             this -> param_mat[sep + i] = optCpt -> mid + 1;
+             this -> param_mat[sep * 2 + i] = optCpt -> invalidatesIndex + 1;
+             this -> param_mat[sep * 3 + i] = optCpt -> invalidatesAfter;
+             this -> param_mat[sep * 4 + i] = param_mat[sep * 4 + i - 1] - optCpt -> bestDecrease;
              this -> dist -> calcParams(optCpt -> start, optCpt -> mid, optCpt -> end, i, this -> param_mat, sep);
              this -> candidates.emplace(optCpt -> start, optCpt -> mid, this -> dist, this -> minSegLen, 0, i);
              this -> candidates.emplace(optCpt -> mid + 1, optCpt -> end, this -> dist, this -> minSegLen, 1, i);
