@@ -31,7 +31,7 @@ public:
      * @param funcCreate function to create an object of the subclass
      * @return A boolean indicating if registration was successful
      */
-    static bool Register(const std::string name, std::string description, objectCreateMethod funcCreate) {
+    static bool Register(std::string name, std::string description, objectCreateMethod funcCreate) {
         if (auto it = regSpecs.find(name); it == regSpecs.end()) {
             regSpecs[name] = funcCreate;
             regDescs[name] = description;
@@ -46,7 +46,7 @@ public:
      * @param name factoryName of the subclass.
      * @return A shared pointer of the interface class' type, or nullptr if the name is not registered.
      */
-    static std::shared_ptr<T> Create(const std::string name) {
+    static std::shared_ptr<T> Create(std::string name) {
         if (auto it = regSpecs.find(name); it != regSpecs.end()) return (it->second)(); // Call the function
         return nullptr;
     }

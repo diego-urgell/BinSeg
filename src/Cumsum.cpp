@@ -52,6 +52,7 @@ public:
         return linearCumsum[end] - linearCumsum[start - 1];
     }
 
+    // nocov start
     /**
      * As this is Linear Cumsum, the method to get a quadratic summaryStatistics should not be called, so it throws an exception.
      * However, it is virtual so it can be overridden in the CumusmSquared Class.
@@ -62,6 +63,7 @@ public:
     virtual double getQuadraticSum(int start, int end){
         throw "No quadratic sum in LinearCumsum";
     }
+    // nocov end
 
     double getTotalMean(){
         return this -> linearCumsum.back() / this -> length;
@@ -71,9 +73,11 @@ public:
         return this -> getLinearSum(start, end) / (end - start + 1);
     }
 
+    // nocov start
     virtual double getVarianceN(int start, int end, bool fixedMean){
         throw "No variance with linear summaryStatistics";
     }
+    // nocov end
 };
 
 

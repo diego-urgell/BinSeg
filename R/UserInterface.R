@@ -108,7 +108,7 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
     }
   }
 
-  if (minSegLen * numCpts < length(data)){
+  if (minSegLen * numCpts > length(data)){
     stop("Given the minimum segment length and the length of the data, it is no possible to obtain the desired number
     of segments")
   }

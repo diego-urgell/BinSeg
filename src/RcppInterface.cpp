@@ -49,7 +49,6 @@ Rcpp::CharacterMatrix distributions_info(){
 Rcpp::CharacterMatrix algorithms_info(){
     Rcpp::CharacterMatrix infoAlgo(AlgorithmFactory::regSpecs.size(), 2);
     int counter = 0;
-    std::vector<std::string> namesAlgo =  std::vector<std::string>();
     for (auto it = AlgorithmFactory::regSpecs.begin(); it != AlgorithmFactory::regSpecs.end(); it++){
         infoAlgo(counter, 0) = it -> first;
         infoAlgo(counter, 1) = AlgorithmFactory::regDescs[it -> first];

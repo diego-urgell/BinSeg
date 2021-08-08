@@ -3,9 +3,9 @@
 \docType{class}
 \name{BinSeg-class}
 \alias{BinSeg-class}
-\title{An S4 class that represent a set of changepoint models.}
+\title{An S4 class that represents a set of changepoint models.}
 \description{
-An S4 class that represent a set of changepoint models.
+An S4 class that represents a set of changepoint models.
 }
 \section{Slots}{
 
