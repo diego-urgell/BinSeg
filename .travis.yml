@@ -1,7 +1,7 @@
 language: r
 
 before_script:
-  - travis.sh
+  - bash travis.sh
 
 sudo: required
 
