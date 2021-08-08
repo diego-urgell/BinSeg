@@ -25,11 +25,24 @@
 #' algorithm, number of changepoints, and parameters.
 #'
 #' @examples
-#' # Create a vector with four different segments that differ in mean
-#' data  <-  c(rnorm(10, 0, 10), rnorm(10, 100, 10), rnorm(10, 200, 10), rnorm(10, 300, 10))
-#' # Compute a changepoint model using the Binary Segmentation algorithm and a normal distribution with
-#' # change in mean. Calculating models up to three changepoints.
-#' ans <- BinSeg::BinSeg(data=data, algorithm="BS", distribution="mean_norm", numCpts=3, minSegLen=1)
+#' # First, get some data to analyse. In this case, it follows a normal distribution with change in mean.
+#' data  <-  c(rnorm(10, 0, 10), rnorm(10, 100, 10), rnorm(10, 50, 10))
+#'
+#' # Call BinSegInfo in order to know the available distributions and algorithms
+#' BinSegInfo()
+#'
+#' # Given the type of change, choose norm_mean, with the BS algorithm and 2 changepoints). Get a BinSeg object in return
+#' models <- BinSegModel(data=data, algorithm="BS", distribution="mean_norm", numCpts=2)
+#'
+#' # In order o get parameter estimations only for the model with 2 changepoints, call the coef function
+#' coef(models, 2L)
+#'
+#' # To plot the whole model, use plot
+#' plot(models)
+#'
+#' #To get a diagnostic plot, use plotDiagnostic
+#' plotDiagnostic(models)
+#'
 #'
 #' @section Details:
 #' This is the only function that must be called to perform a new changepoint analysis with the BinSeg package. Internally,

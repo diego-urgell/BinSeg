@@ -3,6 +3,7 @@ useDynLib(BinSeg, .registration=TRUE)
 import(data.table)
 import(ggfortify)
 import(ggplot2)
+import(methods)
 importFrom(Rcpp, evalCpp)
 
 

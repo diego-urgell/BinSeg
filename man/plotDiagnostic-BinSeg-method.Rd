@@ -18,3 +18,6 @@ A ggplot with the graph of the costs.
 This method creates a graph of the overall cost at each changepoint model up to the selected number of changepoints.
 It allows to determine how many changepoints to consider and to visualize the cost decrease that each new segment brings.
 }
+\seealso{
+plot For a graph of the changepoints on top of the data.
+}

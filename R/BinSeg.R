@@ -3,10 +3,8 @@
 # Created by: diego.urgell
 # Created on: 16/06/21
 
-library(methods)
 
-
-#' @title An S4 class that represent a set of changepoint models.
+#' @title An S4 class that represents a set of changepoint models.
 #'
 #' @slot data A numeric vector with the data used to perform the changepoint analysis.
 #' @slot models_summary A data.table with the summary of the segmentation models. It is only intended for internal usage.
@@ -109,7 +107,7 @@ setMethod("cpts", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_su
 #' example, if the distribution is \code{meanvar_norm}, then two columns will be added, one for segment mean and another
 #' one for segment variance.
 #'
-#' @section Details.
+#' @section Details:
 #' Depending on wheter you want information about a single model or several models, you can provide different values to
 #' the segments parameter:
 #' \describe{
@@ -228,7 +226,7 @@ setMethod("plot", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_su
 #'
 #' @return A ggplot with the graph of the costs.
 #'
-#' @sealso plot For a graph of the changepoints on top of the data.
+#' @seealso plot For a graph of the changepoints on top of the data.
 setMethod("plotDiagnostic", "BinSeg", function(object, ncpts= seq_len(nrow(object@models_summary))){
   validateSegments(object, ncpts)
   plot <- ggplot() +

@@ -32,6 +32,18 @@ selected distribution) for the selected number of segments. Can compute segment 
 Note that the models_summary produced by rcpp_binseg is used here in order to comopute several models without doing the
 changepoint analysis again.
 }
+\section{Details}{
+
+Depending on wheter you want information about a single model or several models, you can provide different values to
+the segments parameter:
+\describe{
+     \item{Atomic value:}{ This means that only the model with the specified number of segments will be computed.
+Therefore, all the values in the segments column will be the same.}
+     \item{Numeric vector:}{In this case, several models will be computed at the same time. The indicated models will
+be differentiated by their segments value.}
+}
+}
+
 \seealso{
 rcpp_binseg for the function that creates the models_summary matrix used in this function.
 }
