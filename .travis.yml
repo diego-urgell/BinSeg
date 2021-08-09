@@ -13,7 +13,7 @@ include:
           - libpng-dev
     env:
       - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
-      - LINKER_FLAGS="-stdlib=libc++ -lc++abi"
+      - LINKER_FLAGS="-std=gnu++17"
 
 before_script:
   - bash travis.sh
