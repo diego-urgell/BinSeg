@@ -13,12 +13,6 @@ addons:
       - g++-7
       - libstdc++-7-dev
 
-before_script:
-  - export CC=gcc-7
-  - export CXX=g++17
-  - export CXX_STD=g++17
-  - export LD=-std=gnu++17
-
 before_install:
   - bash travis.sh
 
