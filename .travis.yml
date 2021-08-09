@@ -15,9 +15,9 @@ addons:
 
 before_script:
   - export CC=gcc-7
-  - export CXX=g++ -std=gnu++17
-  - export CXX_STD=g++ -std=gnu++17
-  - export LD=g++ -std=gnu++17
+  - export CXX=g++17
+  - export CXX_STD=g++17
+  - export LD=-std=gnu++17
   - bash travis.sh
 
 notifications:
