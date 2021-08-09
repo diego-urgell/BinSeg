@@ -18,7 +18,7 @@ before_script:
   - export CXX=g++17
   - export CXX_STD=g++17
   - export LD=-std=gnu++17
-  - bash travis.sh
+  - export CXX17=g++17
 
 notifications:
   email:
