@@ -2,15 +2,15 @@ language: r
 
 include:
   - os: linux
-    compiler: clang
+    compiler: gcc
     addons:
       apt:
         sources:
           - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-6.0
         packages:
-          - clang-6.0
-          - libstdc++-7-dev
+          - g++-7
+    env:
+      - MATRIX_EVAL="export CC=gcc-6"
 
 before_script:
   - bash travis.sh
