@@ -4,6 +4,9 @@ compiler: gcc
 sudo: required
 cache: packages
 
+before_script:
+  - bash travis.sh
+
 os: linux
 addons:
   apt:
@@ -12,9 +15,6 @@ addons:
     packages:
       - g++-7
       - libstdc++-7-dev
-
-before_install:
-  - bash travis.sh
 
 notifications:
   email:
