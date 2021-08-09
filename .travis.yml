@@ -9,8 +9,11 @@ include:
           - ubuntu-toolchain-r-test
         packages:
           - g++-7
+          - libstdc++-7-dev
+          - libpng-dev
     env:
-      - MATRIX_EVAL="export CC=gcc-6"
+      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+      - LINKER_FLAGS="-stdlib=libc++ -lc++abi"
 
 before_script:
   - bash travis.sh
