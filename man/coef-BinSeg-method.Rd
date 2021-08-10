@@ -2,6 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{coef,BinSeg-method}
 \alias{coef,BinSeg-method}
+\alias{coef}
 \title{Obtain segment data for a particular number of changepoints.}
 \usage{
 \S4method{coef}{BinSeg}(object, segments = seq_len(nrow(object@models_summary)))

@@ -2,6 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{plotDiagnostic,BinSeg-method}
 \alias{plotDiagnostic,BinSeg-method}
+\alias{plotDiagnostic}
 \title{Plot a diagnostic of the models}
 \usage{
 \S4method{plotDiagnostic}{BinSeg}(object, ncpts = seq_len(nrow(object@models_summary)))

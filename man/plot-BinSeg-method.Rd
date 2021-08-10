@@ -2,6 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{plot,BinSeg-method}
 \alias{plot,BinSeg-method}
+\alias{plot}
 \title{Plot the data with segments}
 \usage{
 \S4method{plot}{BinSeg}(

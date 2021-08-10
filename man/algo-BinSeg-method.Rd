@@ -2,6 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{algo,BinSeg-method}
 \alias{algo,BinSeg-method}
+\alias{algo}
 \title{Obtain the algorithm used in the analysis.}
 \usage{
 \S4method{algo}{BinSeg}(object)
