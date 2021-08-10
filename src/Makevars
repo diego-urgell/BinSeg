@@ -1,1 +1,2 @@
 CXX_STD = -std=c++17
+CXX17 = -std=c++17
