@@ -108,14 +108,14 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
     }
   }
 
-  if (minSegLen * numCpts < length(data)){
+  if (minSegLen * numCpts > length(data)){
     stop("Given the minimum segment length and the length of the data, it is no possible to obtain the desired number
     of segments")
   }
 
   summary <- as.data.table(rcpp_binseg(data, algorithm, distribution, numCpts, minSegLen))
 
-  summary[apply(summary, 1, function(x) !all(x==0)),] # Eliminate all zero rows
+  summary <- summary[apply(summary, 1, function(x) !all(x==0)),] # Eliminate all zero rows
 
   summary[invalidates_index < 0, invalidates_index := NA,] # Set first invalidate info to NA
   summary[invalidates_after < 0, invalidates_after := NA,]

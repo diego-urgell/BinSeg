@@ -79,7 +79,7 @@ setMethod("dist", "BinSeg", function(object) object@distribution)
 #' @return A numeric vector
 setMethod("cpts", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_summary))){
   validateSegments(object, ncpts)
-  cpts <- object@models_summary[, "cpts"][ncpts]
+  cpts <- unlist(object@models_summary[, "cpts"][ncpts], use.names=FALSE)
   return(cpts)
 })
 
@@ -162,7 +162,7 @@ build_param <- function(before_param, after_param, summary_dt, col_name){
 #' @return A numeric matrix with the overall cost at each number of changepoints
 setMethod("logLik", "BinSeg", function(object, ncpts= seq_len(nrow(object@models_summary))){
   validateSegments(object, ncpts)
-  cpts <- object@models_summary[, "cost"][ncpts]
+  cpts <- unlist(object@models_summary[, "cost"][ncpts], use.names=FALSE)
   return(cpts)
 })
 
