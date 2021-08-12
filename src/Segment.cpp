@@ -48,6 +48,11 @@ public:
         double bestSplitCost = std::numeric_limits<double>::max(), currSplitCost;
         for(int i = this -> start + minSegLen; i <= this -> end - this -> minSegLen; i++){
             currSplitCost = this -> dist -> getCost(this -> start, i, this -> end);
+            if (currSplitCost == INFINITY){
+                this -> mid = 0;
+                bestSplitCost = INFINITY;
+                break;
+            }
             if (currSplitCost < bestSplitCost){
                 bestSplitCost = currSplitCost;
                 this -> mid = i;
