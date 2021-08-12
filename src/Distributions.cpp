@@ -9,7 +9,7 @@
     public:                                                                                                 \
         static std::string factoryName;                                        \
         static std::vector<std::string> param_names;                                                        \
-        SUBCLASS(){(void) is_registered;}                                                                   \
+        SUBCLASS(){(void) created;}                                                                   \
         BODY                                                                                                \
     };
 

@@ -20,7 +20,11 @@ public:
     static std::map<std::string, objectCreateMethod> regSpecs;
     static std::map<std::string, std::string> regDescs;
 
-    GenericFactory<T>() = default;
+    bool created;
+
+    GenericFactory<T>(){
+        created = true;
+    };
 
     /**
      * Method to register a subclass into the factory by providing the factoryName string and the objectCreate method,
@@ -63,7 +67,12 @@ public:
 template<class S, class I, class F>
 class Registration {
 public:
-    Registration() = default;
+
+    bool created;
+
+    Registration(){
+        created = true;
+    }
 
     /**
      * This is the object creation method that is called from the factory whenever a new object of a specific interface

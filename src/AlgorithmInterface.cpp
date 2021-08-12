@@ -57,5 +57,5 @@ public:
  * Instantiation of the GenericFactory template for the Algorithm interface.
  */
 class AlgorithmFactory: public GenericFactory<Algorithm>{
-    void foo(){regSpecs = std::map<std::string, std::shared_ptr<Algorithm>(*)()>();}
+    void foo(){ (void) created; }
 };

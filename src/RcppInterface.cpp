@@ -30,30 +30,41 @@ std::string BS::factoryName = "BS";
 
 std::string BS::description = "Regular Binary Segmentation";
 
-std::map<std::string, std::shared_ptr<Distribution>(*)()> DistributionFactory::regSpecs =
+template<>
+std::map<std::string, std::shared_ptr<Distribution>(*)()> GenericFactory<Distribution>::regSpecs =
         std::map<std::string, std::shared_ptr<Distribution>(*)()>();
 
-std::map<std::string, std::shared_ptr<Algorithm>(*)()> AlgorithmFactory::regSpecs =
+template<>
+std::map<std::string, std::shared_ptr<Algorithm>(*)()> GenericFactory<Algorithm>::regSpecs =
         std::map<std::string, std::shared_ptr<Algorithm>(*)()>();
 
-std::map<std::string, std::string> AlgorithmFactory::regDescs = std::map<std::string, std::string>();
+template<>
+std::map<std::string, std::string> GenericFactory<Algorithm>::regDescs = std::map<std::string, std::string>();
 
-std::map<std::string, std::string> DistributionFactory::regDescs = std::map<std::string, std::string>();
+template<>
+std::map<std::string, std::string> GenericFactory<Distribution>::regDescs = std::map<std::string, std::string>();
 
-bool mean_norm::is_registered =
+template<>
+bool Registration<mean_norm, Distribution, DistributionFactory>::is_registered =
         DistributionFactory::Register(mean_norm::factoryName, mean_norm::description, mean_norm::createMethod);
-bool var_norm::is_registered =
+template<>
+bool Registration<var_norm, Distribution, DistributionFactory>::is_registered =
         DistributionFactory::Register(var_norm::factoryName, var_norm::description, var_norm::createMethod);
-bool meanvar_norm::is_registered =
+template<>
+bool Registration<meanvar_norm, Distribution, DistributionFactory>::is_registered =
         DistributionFactory::Register(meanvar_norm::factoryName, meanvar_norm::description, meanvar_norm::createMethod);
-bool negbin::is_registered =
+template<>
+bool Registration<negbin, Distribution, DistributionFactory>::is_registered =
         DistributionFactory::Register(negbin::factoryName, negbin::description, negbin::createMethod);
-bool poisson::is_registered =
+template<>
+bool Registration<poisson, Distribution, DistributionFactory>::is_registered =
         DistributionFactory::Register(poisson::factoryName, poisson::description, poisson::createMethod);
-bool exponential::is_registered =
+template<>
+bool Registration<exponential, Distribution, DistributionFactory>::is_registered =
         DistributionFactory::Register(exponential::factoryName, exponential::description, exponential::createMethod);
 
-bool BS::is_registered =
+template<>
+bool Registration<BS, Algorithm, AlgorithmFactory>::is_registered =
         AlgorithmFactory::Register(BS::factoryName, BS::description, BS::createMethod);
 
 
