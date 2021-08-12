@@ -19,8 +19,6 @@ Imports:
     ggfortify,
     Rcpp (>= 1.0.6),
     methods
-SystemRequirements:
-    C++17
 LinkingTo: Rcpp
 Suggests: 
     covr,
