@@ -16,7 +16,7 @@
 #define ALGORITHM(SUBCLASS, BODY) \
     class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {          \
     public:                                                                                                 \
-        inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
+        static std::string factoryName;                                        \
         static std::vector<std::string> param_names;                                                        \
         SUBCLASS(){(void) is_registered;}                                                                   \
         BODY                                                                                                \
@@ -33,7 +33,7 @@ ALGORITHM(BS,
      * to the candidates multiset the two newly created segments.
      */
 
-    inline static std::string description = "Regular Binary Segmentation";
+    static std::string description;
 
      void binseg(){
          this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, 0, 0);

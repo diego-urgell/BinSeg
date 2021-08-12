@@ -7,7 +7,7 @@
 #define DISTRIBUTION(SUBCLASS, BODY) \
     class SUBCLASS: public Distribution, public Registration<SUBCLASS, Distribution, DistributionFactory> { \
     public:                                                                                                 \
-        inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
+        static std::string factoryName;                                        \
         static std::vector<std::string> param_names;                                                        \
         SUBCLASS(){(void) is_registered;}                                                                   \
         BODY                                                                                                \
@@ -16,7 +16,7 @@
 
 DISTRIBUTION(mean_norm,
 
-    inline static std::string description = "Normal distribution with change in Mean and constant Variance";
+    static std::string description;
 
     void setCumsum(){
         this -> summaryStatistics = std::make_shared<Cumsum>();
@@ -46,7 +46,7 @@ DISTRIBUTION(mean_norm,
 
 DISTRIBUTION(var_norm,
 
-    inline static std::string description = "Normal Distribution with change in Variance and constant Mean";
+    static std::string description;
 
     double costFunction(int start, int end){
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
@@ -77,7 +77,7 @@ DISTRIBUTION(var_norm,
 
 DISTRIBUTION(meanvar_norm,
 
-    inline static std::string description = "Normal distribution with change in both mean and variance";
+    static std::string description;
 
     double costFunction(int start, int end){
         double lSum =  this -> summaryStatistics -> getLinearSum(start, end);
@@ -111,7 +111,7 @@ DISTRIBUTION(meanvar_norm,
 
 DISTRIBUTION(negbin,
 
-    inline static std::string description = "Negative Binomial distribution with change in Probability of Success";
+    static std::string description;
 
     double costFunction(int start, int end){
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
@@ -149,7 +149,7 @@ DISTRIBUTION(negbin,
 
 DISTRIBUTION(poisson,
 
-    inline static std::string description = "Poisson distribution with change in Rate";
+    static std::string description;
 
     double costFunction(int start, int end){
         double rate = this -> summaryStatistics -> getMean(start, end);
@@ -178,7 +178,7 @@ DISTRIBUTION(poisson,
 
 DISTRIBUTION(exponential,
 
-    inline static std::string description = "Exponential distribution with change in Rate";
+    static std::string description;
 
     double costFunction(int start, int end){
         int T = end - start + 1;
