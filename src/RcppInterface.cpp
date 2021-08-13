@@ -3,6 +3,10 @@
 #include <R.h>
 #include "Distributions.cpp"
 
+// The initialization of the static variables was originally planned to be inline.
+// See https://github.com/diego-urgell/BinSeg/releases/tag/std_rcpp17 for more information about this.
+// This solution is temporary, and will be changed as soon as the external bug is fixed.
+
 std::vector<std::string> mean_norm::param_names = {"before_mean", "after_mean"};
 std::vector<std::string> var_norm::param_names = {"before_var", "after_var"};
 std::vector<std::string> meanvar_norm::param_names = {"before_mean", "after_mean", " before_var", "after_var"};
