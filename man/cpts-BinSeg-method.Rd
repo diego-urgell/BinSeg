@@ -2,6 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{cpts,BinSeg-method}
 \alias{cpts,BinSeg-method}
+\alias{cpts}
 \title{Obtain the changepoints estimated by the analysis.}
 \usage{
 \S4method{cpts}{BinSeg}(object, ncpts = seq_len(nrow(object@models_summary)))
@@ -9,7 +10,7 @@
 \arguments{
 \item{object}{A valid BinSeg object.}
 
-\item{nctps}{The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).}
+\item{ncpts}{The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).}
 }
 \value{
 A numeric vector

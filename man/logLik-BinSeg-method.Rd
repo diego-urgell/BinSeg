@@ -2,14 +2,15 @@
 % Please edit documentation in R/BinSeg.R
 \name{logLik,BinSeg-method}
 \alias{logLik,BinSeg-method}
-\title{Obtain the overall costs of the computed models, from 1 up to the selected number of changepoints.}
+\alias{logLik}
+\title{btain the overall costs of the computed models, from 1 up to the selected number of changepoints.}
 \usage{
 \S4method{logLik}{BinSeg}(object, ncpts = seq_len(nrow(object@models_summary)))
 }
 \arguments{
 \item{object}{A valid BinSeg object.}
 
-\item{nctps}{The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).}
+\item{ncpts}{The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).}
 }
 \value{
 A numeric matrix with the overall cost at each number of changepoints

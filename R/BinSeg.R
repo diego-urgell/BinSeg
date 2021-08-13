@@ -47,9 +47,9 @@ setGeneric("cpts", function(object, ...) standardGeneric("cpts"), signature="obj
 setGeneric("coef", function(object,  ...) standardGeneric("coef"), signature="object")
 setGeneric("plot", function(object, ...) standardGeneric("plot"), signature="object")
 setGeneric("plotDiagnostic", function(object, ...) standardGeneric("plotDiagnostic"), signature="object")
-setGeneric("show", function(object) standardGeneric("show"), signature="object")
 setGeneric("logLik", function(object, ...) standardGeneric("logLik"), signature="object")
 setGeneric("resid", function(object, ...) standardGeneric("resid"), signature="object")
+
 
 
 #' Obtain the algorithm used in the analysis.
@@ -59,6 +59,7 @@ setGeneric("resid", function(object, ...) standardGeneric("resid"), signature="o
 setMethod("algo", "BinSeg", function(object) object@algorithm)
 
 
+
 #' Obtain the distribution used in the analysis.
 #'
 #' @param object A valid BinSeg object
@@ -66,10 +67,11 @@ setMethod("algo", "BinSeg", function(object) object@algorithm)
 setMethod("dist", "BinSeg", function(object) object@distribution)
 
 
+
 #' Obtain the changepoints estimated by the analysis.
 #'
 #' @param object A valid BinSeg object.
-#' @param nctps The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).
+#' @param ncpts The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).
 #'
 #' @section Details:
 #' The changepoints are not sorted. Instead, they are arranged according to the decrease in cost. The first changepoint
@@ -79,9 +81,10 @@ setMethod("dist", "BinSeg", function(object) object@distribution)
 #' @return A numeric vector
 setMethod("cpts", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_summary))){
   validateSegments(object, ncpts)
-  cpts <- object@models_summary[, "cpts"][ncpts]
+  cpts <- unlist(object@models_summary[, "cpts"][ncpts], use.names=FALSE)
   return(cpts)
 })
+
 
 
 #' Obtain segment data for a particular number of changepoints.
@@ -149,7 +152,8 @@ build_param <- function(before_param, after_param, summary_dt, col_name){
   return(param)
 }
 
-#' Obtain the overall costs of the computed models, from 1 up to the selected number of changepoints.
+
+#' btain the overall costs of the computed models, from 1 up to the selected number of changepoints.
 #'
 #' This function returns the overall cost for each one of the models. When you perform a BinSegModel, the models up to the
 #' sepcified number of changepoints are computed. This functions returns the cost of each one of them. The first value is
@@ -157,18 +161,13 @@ build_param <- function(before_param, after_param, summary_dt, col_name){
 #' overall cost with each addition of a segment.
 #'
 #' @param object A valid BinSeg object.
-#' @param nctps The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).
+#' @param ncpts The number of changepoints to return (from 1 up to the number of changepoints indicated in BinSegModel).
 #'
 #' @return A numeric matrix with the overall cost at each number of changepoints
 setMethod("logLik", "BinSeg", function(object, ncpts= seq_len(nrow(object@models_summary))){
   validateSegments(object, ncpts)
-  cpts <- object@models_summary[, "cost"][ncpts]
+  cpts <- unlist(object@models_summary[, "cost"][ncpts], use.names=FALSE)
   return(cpts)
-})
-
-
-setMethod("show", "BinSeg", function(object){
-  object@models_summary
 })
 
 
@@ -216,6 +215,7 @@ setMethod("plot", "BinSeg", function(object, ncpts=seq_len(nrow(object@models_su
   return(plot)
 })
 
+
 #' Plot a diagnostic of the models
 #'
 #' This method creates a graph of the overall cost at each changepoint model up to the selected number of changepoints.
@@ -249,6 +249,7 @@ validateSegments <- function(object, segments){
       max_index)
   }
 }
+
 
 #' Obtain the residuals of the model
 #'

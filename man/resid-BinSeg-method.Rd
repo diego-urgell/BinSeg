@@ -2,6 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{resid,BinSeg-method}
 \alias{resid,BinSeg-method}
+\alias{resid}
 \title{Obtain the residuals of the model}
 \usage{
 \S4method{resid}{BinSeg}(object)

@@ -2,6 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{dist,BinSeg-method}
 \alias{dist,BinSeg-method}
+\alias{dist}
 \title{Obtain the distribution used in the analysis.}
 \usage{
 \S4method{dist}{BinSeg}(object)
