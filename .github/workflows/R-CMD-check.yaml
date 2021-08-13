@@ -92,6 +92,11 @@ jobs:
         run: find check -name 'testthat.Rout*' -exec cat '{}' \; || true
         shell: bash
 
+      - name: Test coverage analysis
+        if: always()
+        run: covr::codecov()
+        shell: Rscript{0}
+
       - name: Upload check results
         if: failure()
         uses: actions/upload-artifact@main
