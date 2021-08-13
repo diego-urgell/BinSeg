@@ -17,12 +17,14 @@ class GenericFactory {
 public:
 
     using objectCreateMethod = std::shared_ptr<T>(*)(); // Pointer to a function that returns a shared pointer of class T
-    inline static std::map<std::string, objectCreateMethod> regSpecs = std::map<std::string, objectCreateMethod>();
-    inline static std::map<std::string, std::string> regDescs = std::map<std::string, std::string>();
+    static std::map<std::string, objectCreateMethod> regSpecs;
+    static std::map<std::string, std::string> regDescs;
 
-public:
+    bool created;
 
-    GenericFactory<T>() = default;
+    GenericFactory<T>(){
+        created = true;
+    };
 
     /**
      * Method to register a subclass into the factory by providing the factoryName string and the objectCreate method,
@@ -32,7 +34,8 @@ public:
      * @return A boolean indicating if registration was successful
      */
     static bool Register(const std::string name, std::string description, objectCreateMethod funcCreate) {
-        if (auto it = regSpecs.find(name); it == regSpecs.end()) {
+        auto it = regSpecs.find(name);
+        if (it == regSpecs.end()) {
             regSpecs[name] = funcCreate;
             regDescs[name] = description;
             return true;
@@ -47,7 +50,8 @@ public:
      * @return A shared pointer of the interface class' type, or nullptr if the name is not registered.
      */
     static std::shared_ptr<T> Create(const std::string name) {
-        if (auto it = regSpecs.find(name); it != regSpecs.end()) return (it->second)(); // Call the function
+        auto it = regSpecs.find(name);
+        if (it != regSpecs.end()) return (it->second)(); // Call the function
         return nullptr;
     }
 };
@@ -63,7 +67,12 @@ public:
 template<class S, class I, class F>
 class Registration {
 public:
-    Registration() = default;
+
+    bool created;
+
+    Registration(){
+        created = true;
+    }
 
     /**
      * This is the object creation method that is called from the factory whenever a new object of a specific interface
@@ -75,6 +84,5 @@ public:
         return std::make_shared<S>();
     }
 
-protected:
-    inline static bool is_registered = F::Register(S::factoryName, S::description, S::createMethod);
+    static bool is_registered;
 };

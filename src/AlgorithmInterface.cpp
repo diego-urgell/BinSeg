@@ -57,5 +57,5 @@ public:
  * Instantiation of the GenericFactory template for the Algorithm interface.
  */
 class AlgorithmFactory: public GenericFactory<Algorithm>{
-    void foo(){(void)regSpecs;}
+    void foo(){ (void) created; }
 };

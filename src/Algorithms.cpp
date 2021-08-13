@@ -13,12 +13,14 @@
 // algorithm), and the BODY, (which is the specific implementation of the binseg method). The TO_STRING Macro is used
 // in order to register the algorithm in the factory using the class name. Also, in the construtor, the boolean
 // is_registered from Registration class is called in order to instantiate the template.
-#define ALGORITHM(SUBCLASS, BODY) \
+#define ALGORITHM(SUBCLASS, BODY)                                                                           \
     class SUBCLASS: public Algorithm, public Registration<SUBCLASS, Algorithm, AlgorithmFactory> {          \
     public:                                                                                                 \
-        inline static std::string factoryName = TO_STRING(SUBCLASS);                                        \
+        static std::string factoryName;                                                                     \
         static std::vector<std::string> param_names;                                                        \
-        SUBCLASS(){(void) is_registered;}                                                                   \
+        SUBCLASS(){                                                                                         \
+            (void) created;              \
+        }                                                                                                   \
         BODY                                                                                                \
     };
 
@@ -33,7 +35,7 @@ ALGORITHM(BS,
      * to the candidates multiset the two newly created segments.
      */
 
-    inline static std::string description = "Regular Binary Segmentation";
+    static std::string description;
 
      void binseg(){
          this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, 0, 0);

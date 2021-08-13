@@ -68,5 +68,5 @@ public:
  * template, and initialize and store the mapping of registered classes.
  */
 class DistributionFactory: public GenericFactory<Distribution>{
-    void foo(){(void)regSpecs;}
+    void foo(){(void)created;}
 };
