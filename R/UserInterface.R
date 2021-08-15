@@ -61,7 +61,7 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   }
 
   if(anyNA(data)){
-    stop("Missing value: NA is not allowed in the data as changepoint methods assume regularly spaced data.")
+    stop("NA is not allowed")
   }
 
   if(length(data) < 1){
@@ -90,8 +90,7 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   }
 
   if (numCpts > max_segments){
-    stop(paste("Too many segments. Given the length of data vector and the distribution,
-     the maximum number of segments is ", max_segments))
+    stop(paste("Too many segments. Given the length of data vector and the distribution, the maximum number of segments is", max_segments))
   }
 
   if(!is.numeric(minSegLen)){
@@ -109,8 +108,7 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   }
 
   if (minSegLen * numCpts > length(data)){
-    stop("Given the minimum segment length and the length of the data, it is no possible to obtain the desired number
-    of segments")
+    stop("Given the minimum segment length and the length of the data, it is no possible to obtain the desired number of segments")
   }
 
   summary <- as.data.table(rcpp_binseg(data, algorithm, distribution, numCpts, minSegLen))
@@ -174,6 +172,5 @@ BinSegInfo <- function(){
   return(info)
 }
 
-# TODO: Would be nice to include the distribution parameters in the C++ code. However, this is not necessary since
-#  conditions must be added anyway. It would be nice to know beforehand which parameters are going to be estimated.
+
 
