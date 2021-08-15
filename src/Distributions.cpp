@@ -152,10 +152,9 @@ DISTRIBUTION(poisson,
     static std::string description;
 
     double costFunction(int start, int end){
-        double rate = this -> summaryStatistics -> getMean(start, end);
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
         int N = end - start + 1;
-        return - lSum * log(rate) + N * rate;
+        return - lSum * (log(lSum) - log(N));
     }
 
     void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){
@@ -178,13 +177,16 @@ DISTRIBUTION(poisson,
 
 DISTRIBUTION(exponential,
 
+    void setCumsum(){
+        this -> summaryStatistics = std::make_shared<Cumsum>();
+    }
+
     static std::string description;
 
     double costFunction(int start, int end){
         int T = end - start + 1;
         double lSum = this -> summaryStatistics -> getLinearSum(start, end);
-        double rate = T / lSum;
-        return rate * lSum - T * log(rate);
+        return - T * (log(T) - log(lSum)); // -1 -> -T on R code
     }
 
     void calcParams(int start, int mid, int end, int i, double * param_mat, int cpts){

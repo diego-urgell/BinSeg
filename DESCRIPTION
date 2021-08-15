@@ -12,7 +12,7 @@ Description: Implements the regular Binary Segmentation Algorithm in a very effi
     Use BinSegInfo to know the available algorithms, and BinSegModel to compute a changepoint analysis with the specified data, algorithm, and distribution. Then, use the BinSeg class methods to interact with and visualize the models.
 License: GPL (>= 2)
 Depends:
-    R(>= 4.1)
+    R(>= 4.0.4)
 Imports: 
     data.table,
     ggplot2,
