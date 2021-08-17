@@ -3,6 +3,7 @@
 # Created by: diego.urgell
 # Created on: 02/08/21
 
+library(BinSeg)
 set.seed(300)
 
 test_that(desc="Test the methods from the BinSeg class",{
@@ -23,11 +24,16 @@ test_that(desc="Test the methods from the BinSeg class",{
   expect_equal(nrow(ans_coef), 10)
   expect_named(ans_coef, c("segments", "start", "end", "mean"))
   expect_equal(length(logLik(ans)), 4)
-  #expect_equal(resid(data), length(data))
+  expect_equal(length(resid(ans)), length(data))
   expect_equal(length(plot_model$layers), 2)
   expect_s3_class(plot_model$layers[[1]]$geom, "GeomLine")
   expect_equal(length(plot_diagnostic$layers), 1)
   expect_s3_class(plot_diagnostic$layers[[1]]$geom, "GeomLine")
+  expect_error(plot(ans, ncpts=1:10),
+               "Segments must be a vector of unique integers between 1 and 4")
+  expect_error(plot(ans, y_axis=1:10),
+               "The provided y_index vector must have the length as the data vector")
+
 })
 
 test_that("Test BinSegInfo method", {
@@ -115,4 +121,11 @@ test_that("Incompatible segment length and number of changepoints", {
                "Given the minimum segment length and the length of the data, it is no possible to obtain the desired number of segments")
 })
 
-# TODO: Write tests for data validation, finish resid and test, test cost funtions with R code, set contributions
+test_that("Less segments because of zero variance", {
+  vec <- c(1, 2, 1, 2, 3, 3, 2)
+  expect_warning(BinSeg::BinSegModel(vec, "BS", "meanvar_norm", 3, 2),
+    "The amount of changepoints found is smaller than the expected number. It was not possible to further partition the data since the remaining segments all have zero variance.")
+})
+
+
+# TODO: finish resid and test, set contributions

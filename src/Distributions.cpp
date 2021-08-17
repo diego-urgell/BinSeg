@@ -30,7 +30,7 @@ DISTRIBUTION(mean_norm,
 
     void calcParams(int start, int mid, int end, int i,  double * param_mat, int cpts){
         param_mat[i + cpts * 5] = this -> summaryStatistics -> getMean(start, mid);
-        param_mat[i + cpts * 6] = this->summaryStatistics->getMean(mid + 1, end);
+        param_mat[i + cpts * 6] = this -> summaryStatistics -> getMean(mid + 1, end);
     }
 
     std::vector<std::string> getParamNames(){

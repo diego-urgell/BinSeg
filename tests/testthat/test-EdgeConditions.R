@@ -3,6 +3,8 @@
 # Created by: diego.urgell
 # Created on: 02/08/21
 
+library(BinSeg)
+
 test_that("Change in mean + Single data point -> Zero cost and trivial mean", {
   ans <- BinSeg::BinSegModel(100, "BS", "mean_norm", 1)
   expect_equal(logLik(ans), 0)

@@ -245,8 +245,7 @@ validateSegments <- function(object, segments){
       all(is.finite(segments) & 0<segments & segments <= max_index)
   )){
     stop(
-      "Segments must be a vector of unique integers between 1 and ",
-      max_index)
+      paste("Segments must be a vector of unique integers between 1 and", max_index))
   }
 }
 
@@ -260,16 +259,32 @@ validateSegments <- function(object, segments){
 #' @return A numeric vector with the model's residuals. It has the same length as the input data vector.
 setMethod("resid", "BinSeg", function(object){
   coefs <- coef(object, nrow(object@models_summary))
-  # check if mean is on the data.table
-  means <- coefs[, mean(object@data[start:end]), by=start]$V1 #Dont recalculate since it is dsitribution specific.
-  vars <- coefs[, var(object@data[start:end]), by=start]$V1
-  coefs <- cbind(coefs, means, vars)
+  dist <- dist(object)
+
+  if (dist %in% c("mean_norm", "var_norm", "meanvar_norm")){
+    if (! "mean" %in% colnames(coefs)){
+      mean <- coefs[, mean(object@data[start:end]), by=start][["V1"]]
+      coefs <- cbind(coefs, mean)
+    }
+    if (! "variance" %in% colnames(coefs)){
+      variance <- coefs[, mean(object@data[start:end]), by=start][["V1"]]
+      coefs <- cbind(coefs, variance)
+    }
+    resid_func <- function(i) (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["mean"]][i])  / sqrt(coefs[["variance"]][i])
+  }
+
+  if (dist == "poisson"){
+    resid_func <- function(i) (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["rate"]][i])  / sqrt(coefs[["rate"]][i])
+  }
+
+  if(dist == "exponential" || dist == "negbin"){
+    stop("The resid method is not yet implemented for these distributions")
+  }
+
   ans <- numeric()
   for(i in seq_len(nrow(coefs))){ #In poisson both of them are rate.
-    seg <- (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["means"]][i])  / sqrt(coefs[["vars"]][i]) # sd instead of var
+    seg <- resid_func(i) # sd instead of var
     ans <- c(ans,seg)
   }
   return(ans)
 })
-
-

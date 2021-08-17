@@ -145,8 +145,8 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
                    distribution=distribution, min_seg_len=minSegLen, param_names=param_names)
 
   if (nrow(BinSegObj@models_summary) < numCpts){
-    warning("The amount of changepoints found is smaller than the expected number. It was not possible to further
-    partition the data since the remaining segments all have zero variance.")
+    warning(paste("The amount of changepoints found is smaller than the expected number. It was not possible to further",
+    "partition the data since the remaining segments all have zero variance."))
   }
 
   return(BinSegObj)
