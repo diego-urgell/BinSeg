@@ -6,6 +6,55 @@
 library(BinSeg)
 set.seed(300)
 
+psd <- function(x) {
+  sqrt(sum((x - mean(x))^2) / (length(x)))
+}
+
+fixed_mean_psd <- function(x, mean){
+  sqrt(sum((x - mean)^2) / (length(x)))
+}
+
+check_resid <- function(object, ncpts=nrow(object@models_summary)){
+
+  dist <- dist(object)
+  obj_coef <- coef(object, ncpts)
+  resids <- resid(object)
+  data <- object@data
+
+  if (dist == "mean_norm"){ # Cost function per segment.
+    resid_func <- function(start, end){
+      tmp <- resids[start:end] * sd(data)
+      tmp <- tmp + mean(data[start:end])
+    }
+  }
+  else if (dist == "var_norm"){
+    resid_func <- function(start, end){
+      tmp <- resids[start:end] * fixed_mean_psd(data[start:end], mean(data))
+      tmp <- tmp + mean(data)
+    }
+  }
+  else if (dist == "meanvar_norm"){
+    resid_func <- function(start, end){
+      tmp <- resids[start:end] * psd(data[start:end])
+      tmp <- tmp + mean(data[start:end])
+    }
+  }
+  else if (dist == "poisson"){
+    resid_func <- function(start, end){
+      tmp <- resids[start:end] * sqrt(mean(data[start:end]))
+      tmp <- tmp + mean(data[start:end])
+    }
+  }
+
+  for(i in 1:ncpts){
+    start <-  obj_coef[["start"]][i]
+    end <- obj_coef[["end"]][i]
+    resids[start:end] <- resid_func(start, end)
+  }
+
+  return(resids)
+}
+
 test_that(desc="Test the methods from the BinSeg class",{
   data  <-  c(rnorm(10, 0, 10), rnorm(10, 100, 10), rnorm(10, 200, 10),
               rnorm(10, 300, 10))
@@ -125,6 +174,30 @@ test_that("Less segments because of zero variance", {
   vec <- c(1, 2, 1, 2, 3, 3, 2)
   expect_warning(BinSeg::BinSegModel(vec, "BS", "meanvar_norm", 3, 2),
     "The amount of changepoints found is smaller than the expected number. It was not possible to further partition the data since the remaining segments all have zero variance.")
+})
+
+test_that("Resid for mean norm", {
+  vec <- rnorm(200, 200, 100)
+  ans <- BinSeg::BinSegModel(vec,  "BS", "mean_norm", 15)
+  expect_equal(round(vec,10), (round(check_resid(ans), 10)))
+})
+
+test_that("Resid for meanvar norm", {
+  vec <- rnorm(200, 200, 100)
+  ans <- BinSeg::BinSegModel(vec,  "BS", "meanvar_norm", 15, 2)
+  expect_equal(round(vec,10), (round(check_resid(ans), 10)))
+})
+
+test_that("Resid for var norm", {
+  vec <- rnorm(200, 200, 100)
+  ans <- BinSeg::BinSegModel(vec,  "BS", "var_norm", 15, 2)
+  expect_equal(round(vec,10), (round(check_resid(ans), 10)))
+})
+
+test_that("Resid for poisson", {
+  vec <- rpois(500, 50)
+  ans <- BinSeg::BinSegModel(vec,  "BS", "poisson", 15, 2)
+  expect_equal(round(vec,10), (round(check_resid(ans), 10)))
 })
 
 
