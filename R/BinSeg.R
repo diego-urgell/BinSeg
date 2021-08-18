@@ -153,7 +153,7 @@ build_param <- function(before_param, after_param, summary_dt, col_name){
 }
 
 
-#' btain the overall costs of the computed models, from 1 up to the selected number of changepoints.
+#' Obtain the overall costs of the computed models, from 1 up to the selected number of changepoints.
 #'
 #' This function returns the overall cost for each one of the models. When you perform a BinSegModel, the models up to the
 #' sepcified number of changepoints are computed. This functions returns the cost of each one of them. The first value is
@@ -263,11 +263,11 @@ setMethod("resid", "BinSeg", function(object){
 
   if (dist %in% c("mean_norm", "var_norm", "meanvar_norm")){
     if (! "mean" %in% colnames(coefs)){
-      mean <- coefs[, mean(object@data[start:end]), by=start][["V1"]]
+      mean <- coefs[, mean(object@data), by=start][["V1"]]
       coefs <- cbind(coefs, mean)
     }
     if (! "variance" %in% colnames(coefs)){
-      variance <- coefs[, mean(object@data[start:end]), by=start][["V1"]]
+      variance <- coefs[, var(object@data), by=start][["V1"]]
       coefs <- cbind(coefs, variance)
     }
     resid_func <- function(i) (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["mean"]][i])  / sqrt(coefs[["variance"]][i])
@@ -282,8 +282,8 @@ setMethod("resid", "BinSeg", function(object){
   }
 
   ans <- numeric()
-  for(i in seq_len(nrow(coefs))){ #In poisson both of them are rate.
-    seg <- resid_func(i) # sd instead of var
+  for(i in seq_len(nrow(coefs))){
+    seg <- resid_func(i)
     ans <- c(ans,seg)
   }
   return(ans)

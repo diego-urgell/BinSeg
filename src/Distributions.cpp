@@ -61,8 +61,8 @@ DISTRIBUTION(var_norm,
     void calcParams(int start, int mid, int end, int i,  double * param_mat, int cpts){
         double varLeft = this -> summaryStatistics -> getVarianceN(start, mid, true);
         double varRight = this -> summaryStatistics -> getVarianceN(mid + 1, end, true);
-        param_mat[i + cpts * 5] = sqrt(varLeft / (mid - start + 1));
-        param_mat[i + cpts * 6] = sqrt(varRight / (end - mid + 1));
+        param_mat[i + cpts * 5] = varLeft / (mid - start + 1);
+        param_mat[i + cpts * 6] = varRight / (end - mid);
     }
 
     std::vector<std::string> getParamNames(){
@@ -97,7 +97,7 @@ DISTRIBUTION(meanvar_norm,
         param_mat[i + cpts * 5] = meanLeft;
         param_mat[i + cpts * 6] = meanRight;
         param_mat[i + cpts * 7] = varLeft / (mid - start + 1);
-        param_mat[i + cpts * 8] = varRight / (end - mid + 1);
+        param_mat[i + cpts * 8] = varRight / (end - mid);
     }
 
     std::vector<std::string> getParamNames(){
