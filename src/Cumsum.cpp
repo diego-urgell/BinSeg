@@ -59,9 +59,11 @@ public:
      * @param end inclusive
      * @return Runtime error if called.
      */
+    // nocov start
     virtual double getQuadraticSum(int start, int end){
         throw "No quadratic sum in LinearCumsum";
     }
+    // nocov end
 
     double getTotalMean(){
         return this -> linearCumsum.back() / this -> length;
@@ -71,9 +73,11 @@ public:
         return this -> getLinearSum(start, end) / (end - start + 1);
     }
 
+    // nocov start
     virtual double getVarianceN(int start, int end, bool fixedMean){
         throw "No variance with linear summaryStatistics";
     }
+    // nocov end
 };
 
 

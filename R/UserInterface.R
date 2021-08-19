@@ -61,7 +61,7 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   }
 
   if(anyNA(data)){
-    stop("Missing value: NA is not allowed in the data as changepoint methods assume regularly spaced data.")
+    stop("NA is not allowed")
   }
 
   if(length(data) < 1){
@@ -90,8 +90,7 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   }
 
   if (numCpts > max_segments){
-    stop(paste("Too many segments. Given the length of data vector and the distribution,
-     the maximum number of segments is ", max_segments))
+    stop(paste("Too many segments. Given the length of data vector and the distribution, the maximum number of segments is", max_segments))
   }
 
   if(!is.numeric(minSegLen)){
@@ -109,8 +108,7 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
   }
 
   if (minSegLen * numCpts > length(data)){
-    stop("Given the minimum segment length and the length of the data, it is no possible to obtain the desired number
-    of segments")
+    stop("Given the minimum segment length and the length of the data, it is no possible to obtain the desired number of segments")
   }
 
   summary <- as.data.table(rcpp_binseg(data, algorithm, distribution, numCpts, minSegLen))
@@ -125,18 +123,30 @@ BinSegModel <- function(data, algorithm, distribution, numCpts=1, minSegLen=1){
      set(summary,which(na_inf(summary[[j]])),j,NA)
   }
 
-  if (distribution == "mean_norm") param_names <- "mean"
+  if (distribution == "mean_norm"){
+    param_names <- "mean"
+    summary <- summary[, cost := cost + sum(data^2)] # Adding the missing cumsum squared
+  }
   else if(distribution == "var_norm") param_names <- "variance"
   else if (distribution == "meanvar_norm") param_names <- c("mean", "variance")
   else if (distribution == "negbin") param_names <- "success_probability"
-  else if (distribution == "poisson" || distribution == "exponential") param_names <- "rate"
+  else if (distribution == "poisson"){
+    param_names <- "rate"
+    summary <- summary[, cost := cost + sum(data) + sum(lgamma(data))]
+  }
+  else if (distribution == "exponential"){
+    param_names <- "rate"
+    summary <- summary[, cost := cost + length(data)]
+  }
+
+  summary <- summary[, cost := cost * 2]
 
   BinSegObj <- new("BinSeg", data=data, models_summary=summary, algorithm=algorithm,
                    distribution=distribution, min_seg_len=minSegLen, param_names=param_names)
 
   if (nrow(BinSegObj@models_summary) < numCpts){
-    warning("The amount of changepoints found is smaller than the expected number. It was not possible to further
-    partition the data since the remaining segments all have zero variance.")
+    warning(paste("The amount of changepoints found is smaller than the expected number. It was not possible to further",
+    "partition the data since the remaining segments all have zero variance."))
   }
 
   return(BinSegObj)
@@ -162,6 +172,5 @@ BinSegInfo <- function(){
   return(info)
 }
 
-# TODO: Would be nice to include the distribution parameters in the C++ code. However, this is not necessary since
-#  conditions must be added anyway. It would be nice to know beforehand which parameters are going to be estimated.
+
 

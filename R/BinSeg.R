@@ -131,9 +131,11 @@ setMethod("coef", "BinSeg", function(object, segments=seq_len(nrow(object@models
        start=c(1L, cpts[-.N]+1L),
        end=cpts
      )]
-     for(j in seq_along(object@param_names)){
-       jj <- 6 + (j - 1)*2
-       ans <- cbind(ans, build_param(jj, jj+1, curr_segs, object@param_names[j]))
+     for(param_index in seq_along(object@param_names)){
+       params_start_index <- 6
+       param_mat_index <- params_start_index + (param_index - 1)*2
+       param_name <- object@param_names[[param_index]]
+       set(ans, j=param_name, value=build_param(param_mat_index, param_mat_index+1, curr_segs))
      }
      ans
   }, by=segments]
@@ -148,12 +150,11 @@ build_param <- function(before_param, after_param, summary_dt, col_name){
   ord <- order(summary_dt$cpts)
   param_mat <- matrix(param_full, 2, byrow=TRUE)[, ord]
   param <- summary_dt[ord, data.table(param_mat[!is.na(param_mat)])]
-  names(param) <- col_name
   return(param)
 }
 
 
-#' btain the overall costs of the computed models, from 1 up to the selected number of changepoints.
+#' Obtain the overall costs of the computed models, from 1 up to the selected number of changepoints.
 #'
 #' This function returns the overall cost for each one of the models. When you perform a BinSegModel, the models up to the
 #' sepcified number of changepoints are computed. This functions returns the cost of each one of them. The first value is
@@ -245,8 +246,7 @@ validateSegments <- function(object, segments){
       all(is.finite(segments) & 0<segments & segments <= max_index)
   )){
     stop(
-      "Segments must be a vector of unique integers between 1 and ",
-      max_index)
+      paste("Segments must be a vector of unique integers between 1 and", max_index))
   }
 }
 
@@ -260,16 +260,32 @@ validateSegments <- function(object, segments){
 #' @return A numeric vector with the model's residuals. It has the same length as the input data vector.
 setMethod("resid", "BinSeg", function(object){
   coefs <- coef(object, nrow(object@models_summary))
-  # check if mean is on the data.table
-  means <- coefs[, mean(object@data[start:end]), by=start]$V1 #Dont recalculate since it is dsitribution specific.
-  vars <- coefs[, var(object@data[start:end]), by=start]$V1
-  coefs <- cbind(coefs, means, vars)
+  dist <- dist(object)
+
+  if (dist %in% c("mean_norm", "var_norm", "meanvar_norm")){
+    if (! "mean" %in% colnames(coefs)){
+      mean <- coefs[, mean(object@data), by=start][["V1"]]
+      coefs <- cbind(coefs, mean)
+    }
+    if (! "variance" %in% colnames(coefs)){
+      variance <- coefs[, var(object@data), by=start][["V1"]]
+      coefs <- cbind(coefs, variance)
+    }
+    resid_func <- function(i) (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["mean"]][i])  / sqrt(coefs[["variance"]][i])
+  }
+
+  if (dist == "poisson"){
+    resid_func <- function(i) (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["rate"]][i])  / sqrt(coefs[["rate"]][i])
+  }
+
+  if(dist == "exponential" || dist == "negbin"){
+    stop("The resid method is not yet implemented for these distributions")
+  }
+
   ans <- numeric()
-  for(i in seq_len(nrow(coefs))){ #In poisson both of them are rate.
-    seg <- (object@data[coefs[["start"]][i]:coefs[["end"]][i]] - coefs[["means"]][i])  / sqrt(coefs[["vars"]][i]) # sd instead of var
+  for(i in seq_len(nrow(coefs))){
+    seg <- resid_func(i)
     ans <- c(ans,seg)
   }
   return(ans)
 })
-
-

@@ -9,7 +9,7 @@
 
 std::vector<std::string> mean_norm::param_names = {"before_mean", "after_mean"};
 std::vector<std::string> var_norm::param_names = {"before_var", "after_var"};
-std::vector<std::string> meanvar_norm::param_names = {"before_mean", "after_mean", " before_var", "after_var"};
+std::vector<std::string> meanvar_norm::param_names = {"before_mean", "after_mean", "before_var", "after_var"};
 std::vector<std::string> negbin::param_names = {"before_prob", "after_prob"};
 std::vector<std::string> poisson::param_names = {"before_rate", "after_rate"};
 std::vector<std::string> exponential::param_names = {"before_rate", "after_rate"};
@@ -108,7 +108,6 @@ Rcpp::CharacterMatrix distributions_info(){
 Rcpp::CharacterMatrix algorithms_info(){
     Rcpp::CharacterMatrix infoAlgo(AlgorithmFactory::regSpecs.size(), 2);
     int counter = 0;
-    std::vector<std::string> namesAlgo =  std::vector<std::string>();
     for (auto it = AlgorithmFactory::regSpecs.begin(); it != AlgorithmFactory::regSpecs.end(); it++){
         infoAlgo(counter, 0) = it -> first;
         infoAlgo(counter, 1) = AlgorithmFactory::regDescs[it -> first];
