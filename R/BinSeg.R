@@ -131,9 +131,11 @@ setMethod("coef", "BinSeg", function(object, segments=seq_len(nrow(object@models
        start=c(1L, cpts[-.N]+1L),
        end=cpts
      )]
-     for(j in seq_along(object@param_names)){
-       jj <- 6 + (j - 1)*2
-       ans <- cbind(ans, build_param(jj, jj+1, curr_segs, object@param_names[j]))
+     for(param_index in seq_along(object@param_names)){
+       params_start_index <- 6
+       param_mat_index <- params_start_index + (param_index - 1)*2
+       param_name <- object@param_names[[param_index]]
+       set(ans, j=param_name, value=build_param(param_mat_index, param_mat_index+1, curr_segs))
      }
      ans
   }, by=segments]
@@ -148,7 +150,6 @@ build_param <- function(before_param, after_param, summary_dt, col_name){
   ord <- order(summary_dt$cpts)
   param_mat <- matrix(param_full, 2, byrow=TRUE)[, ord]
   param <- summary_dt[ord, data.table(param_mat[!is.na(param_mat)])]
-  names(param) <- col_name
   return(param)
 }
 

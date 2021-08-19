@@ -21,29 +21,24 @@ check_resid <- function(object, ncpts=nrow(object@models_summary)){
   resids <- resid(object)
   data <- object@data
 
-  if (dist == "mean_norm"){ # Cost function per segment.
-    resid_func <- function(start, end){
-      tmp <- resids[start:end] * sd(data)
-      tmp <- tmp + mean(data[start:end])
+  resid_func <- function(start, end){
+    if (dist == "mean_norm"){ # Cost function per segment.
+      resid_times_sd <- resids[start:end] * sd(data)
+      resid_original_data <- resid_times_sd + mean(data[start:end])
     }
-  }
-  else if (dist == "var_norm"){
-    resid_func <- function(start, end){
-      tmp <- resids[start:end] * fixed_mean_psd(data[start:end], mean(data))
-      tmp <- tmp + mean(data)
+    else if (dist == "var_norm"){
+      resid_times_sd <- resids[start:end] * fixed_mean_psd(data[start:end], mean(data))
+      resid_original_data <- resid_times_sd + mean(data)
     }
-  }
-  else if (dist == "meanvar_norm"){
-    resid_func <- function(start, end){
-      tmp <- resids[start:end] * psd(data[start:end])
-      tmp <- tmp + mean(data[start:end])
+    else if (dist == "meanvar_norm"){
+      resid_times_sd <- resids[start:end] * psd(data[start:end])
+      resid_original_data <- resid_times_sd + mean(data[start:end])
     }
-  }
-  else if (dist == "poisson"){
-    resid_func <- function(start, end){
-      tmp <- resids[start:end] * sqrt(mean(data[start:end]))
-      tmp <- tmp + mean(data[start:end])
+    else if (dist == "poisson"){
+      resid_times_sd <- resids[start:end] * sqrt(mean(data[start:end]))
+      resid_original_data <- resid_times_sd + mean(data[start:end])
     }
+    return(resid_original_data)
   }
 
   for(i in 1:ncpts){
@@ -200,5 +195,14 @@ test_that("Resid for poisson", {
   expect_equal(round(vec,10), (round(check_resid(ans), 10)))
 })
 
+test_that("Resid for exponential", {
+  vec <- rexp(500, 50)
+  ans <- BinSeg::BinSegModel(vec,  "BS", "exponential", 15, 2)
+  expect_error(check_resid(ans), "The resid method is not yet implemented for these distributions")
+})
 
-# TODO: finish resid and test, set contributions
+test_that("Resid for negbin", {
+  vec <- rnbinom(500, 50, 0.5)
+  ans <- BinSeg::BinSegModel(vec,  "BS", "negbin", 15, 2)
+  expect_error(check_resid(ans), "The resid method is not yet implemented for these distributions")
+})
