@@ -19,7 +19,7 @@
         static std::string factoryName;                                                                     \
         static std::vector<std::string> param_names;                                                        \
         SUBCLASS(){                                                                                         \
-            (void) created;              \
+            (void) created;                                                                                 \
         }                                                                                                   \
         BODY                                                                                                \
     };

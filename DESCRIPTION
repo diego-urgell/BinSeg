@@ -3,7 +3,9 @@ Type: Package
 Title: Efficient Binary Segmentation for several distributions
 Version: 1.0
 Date: 2021-06-10
-Author: Diego Enrique Jimenez Urgell
+Authors@R: c(person("Diego Enrique", "Jimenez Urgell", role=c("aut", "cre"), email="diegourgell0@gmail.com"),
+    person("Rebecca", "Killick", role=c("aut", "rev")),
+    person("Toby", "Hocking", role=c("aut", "rev")))
 Maintainer: Diego Enrique Jimenez Urgell <diegourgell0@gmail.com>
 URL: https://github.com/diego-urgell/BinSeg
 BugReports: https://github.com/diego-urgell/BinSeg/issues

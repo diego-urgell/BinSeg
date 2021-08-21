@@ -4,12 +4,12 @@
 
 #include "Algorithms.cpp"
 
-#define DISTRIBUTION(SUBCLASS, BODY) \
+#define DISTRIBUTION(SUBCLASS, BODY)                                                                        \
     class SUBCLASS: public Distribution, public Registration<SUBCLASS, Distribution, DistributionFactory> { \
     public:                                                                                                 \
-        static std::string factoryName;                                        \
+        static std::string factoryName;                                                                     \
         static std::vector<std::string> param_names;                                                        \
-        SUBCLASS(){(void) created;}                                                                   \
+        SUBCLASS(){(void) created;}                                                                         \
         BODY                                                                                                \
     };
 
