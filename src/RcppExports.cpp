@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // rcpp_binseg
 Rcpp::NumericMatrix rcpp_binseg(Rcpp::NumericVector data, Rcpp::String algorithm, Rcpp::String distribution, int numCpts, int minSegLen);
 RcppExport SEXP _BinSeg_rcpp_binseg(SEXP dataSEXP, SEXP algorithmSEXP, SEXP distributionSEXP, SEXP numCptsSEXP, SEXP minSegLenSEXP) {

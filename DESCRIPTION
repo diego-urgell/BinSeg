@@ -3,14 +3,16 @@ Type: Package
 Title: Efficient Binary Segmentation for several distributions
 Version: 1.0
 Date: 2021-06-10
-Author: Diego Enrique Jimenez Urgell
+Authors@R: c(person("Diego Enrique", "Jimenez Urgell", role=c("aut", "cre"), email="diegourgell0@gmail.com"),
+    person("Rebecca", "Killick", role=c("aut", "rev")),
+    person("Toby", "Hocking", role=c("aut", "rev")))
 Maintainer: Diego Enrique Jimenez Urgell <diegourgell0@gmail.com>
 URL: https://github.com/diego-urgell/BinSeg
 BugReports: https://github.com/diego-urgell/BinSeg/issues
 Description: Implements the regular Binary Segmentation Algorithm in a very efficient way. It supports distribution specific cost functions for several different distributions and types of changes. The changepoint analysis is implemented in C++, by using an Object Oriented approach such that the package is seamlessly extensible in terms of cost functions and Binary Segmentation based algorithms.
     -
     Use BinSegInfo to know the available algorithms, and BinSegModel to compute a changepoint analysis with the specified data, algorithm, and distribution. Then, use the BinSeg class methods to interact with and visualize the models.
-License: GPL (>= 2)
+License: MIT
 Depends:
     R(>= 4.0)
 Imports: 

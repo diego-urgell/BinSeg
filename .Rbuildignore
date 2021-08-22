@@ -1,2 +1,3 @@
 ^\.github$
 ^\codecov.yml$
+^\.idea$
