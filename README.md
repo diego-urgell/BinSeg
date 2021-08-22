@@ -33,6 +33,8 @@ The development of this project was funded by Google Summer of Code 2021. My men
 
 ## Package Usage
 
+This is a quick walk-trough of how the BinSeg package can be used to perform changepoint analysis. For a detailed documentation, please see the [official manual](https://drive.google.com/file/d/1-Q6524Oitp12LJcryB9E9O-mVM-VAwrK/view?usp=sharing). 
+
 ### Installation
 
 First, it is necessary to install the package. Currently, the package must be installed from GitHub. It requires at least R 4.0.
