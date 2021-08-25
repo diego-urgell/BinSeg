@@ -37,7 +37,8 @@ ALGORITHM(BS,
 
     static std::string description;
 
-     void binseg(){
+     void binseg(double *data, int length, int numCpts, std::shared_ptr<Distribution> dist, int minSegLen, double * param_mat){
+         this -> init(data, length, numCpts, dist, minSegLen, param_mat);
          this -> candidates.emplace(0, this -> length-1, this -> dist, this -> minSegLen, 0, 0);
          int sep = this -> numCpts + 1;
          this -> param_mat[0] = 1;
