@@ -6,7 +6,6 @@ Date: 2021-06-10
 Authors@R: c(person("Diego Enrique", "Jimenez Urgell", role=c("aut", "cre"), email="diegourgell0@gmail.com"),
     person("Rebecca", "Killick", role=c("aut", "rev")),
     person("Toby", "Hocking", role=c("aut", "rev")))
-Maintainer: Diego Enrique Jimenez Urgell <diegourgell0@gmail.com>
 URL: https://github.com/diego-urgell/BinSeg
 BugReports: https://github.com/diego-urgell/BinSeg/issues
 Description: Implements the regular Binary Segmentation Algorithm in a very efficient way. It supports distribution specific cost functions for several different distributions and types of changes. The changepoint analysis is implemented in C++, by using an Object Oriented approach such that the package is seamlessly extensible in terms of cost functions and Binary Segmentation based algorithms.

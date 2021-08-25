@@ -81,8 +81,7 @@ Rcpp::NumericMatrix rcpp_binseg(Rcpp::NumericVector data, Rcpp::String algorithm
     Rcpp::NumericMatrix params_mat = Rcpp::NumericMatrix(numCpts + 1, dist -> getParamCount() + 5);
 
     dist -> setCumsum();
-    algo -> init(&data[0], data.size(), numCpts, dist, minSegLen, &params_mat[0]);
-    algo -> binseg();
+    algo -> binseg(&data[0], data.size(), numCpts, dist, minSegLen, &params_mat[0]);
 
     Rcpp::colnames(params_mat) = Rcpp::wrap(algo -> getParamNames());
 

@@ -2,8 +2,7 @@
 % Please edit documentation in R/BinSeg.R
 \name{logLik,BinSeg-method}
 \alias{logLik,BinSeg-method}
-\alias{logLik}
-\title{btain the overall costs of the computed models, from 1 up to the selected number of changepoints.}
+\title{Obtain the overall costs of the computed models, from 1 up to the selected number of changepoints.}
 \usage{
 \S4method{logLik}{BinSeg}(object, ncpts = seq_len(nrow(object@models_summary)))
 }

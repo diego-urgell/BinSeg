@@ -46,7 +46,7 @@ public:
      * This is the most important method, that implements the algorithm per se. It must be overridden in every specific
      * algorithm subclass.
      */
-    virtual void binseg() = 0;
+    virtual void binseg(double *data, int length, int numCpts, std::shared_ptr<Distribution> dist, int minSegLen, double * param_mat) = 0;
 
     virtual std::vector<std::string> getParamNames() = 0;
 
